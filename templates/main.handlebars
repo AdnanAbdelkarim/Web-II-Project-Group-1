@@ -1,0 +1,51 @@
+<style>
+    body{
+        width: 90%;
+        min-width: 800px;
+        max-width: 1200px;
+        margin-right: auto;
+        margin-left: auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+        background-color: #dfdddd84;
+    }
+    .login-signup-nav{
+        background-color: rgb(148, 172, 180);
+        border: 2px solid lightsteelblue;
+        border-radius: 20px;
+        text-align: center;
+        grid-column: 4/-1;
+        padding-right: 30px;
+        align-items: center;
+    }
+    ul{
+        list-style-type: none;
+    }
+    ul li{
+        font-size: 20px;
+        padding-bottom: 10px;
+        color: black;
+        
+    }
+    .login{
+        float: left;
+    }
+    .sign-up{
+        float: right;
+    }
+    a{
+        color: black;
+        text-decoration: none;
+    }
+</style>
+
+<body>
+    <nav class="login-signup-nav">
+        <ul>
+            <li class="login"><a href="/login">Login</a></li>
+            <li class="sign-up"><a href="/sign-up">Sign Up</a></li>
+        </ul>
+    </nav>
+
+</body>
