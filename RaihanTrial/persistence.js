@@ -29,4 +29,7 @@ async function test(){
     console.log(exp_1);
 }
 
-// test();
+
+module.exports = {
+    getUserDetails
+}
