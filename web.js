@@ -101,12 +101,23 @@ app.post('/register', async (req, res) => {
 })
 
 app.get('/standard', (req, res) => {
+    activeCookie = req.cookies.session
+    if(!activeCookie){
+        res.redirect('/?message=The+session+has+ended')
+        return
+    }
     res.render('fakeUsers', {layout : undefined})
-});
+})
+    
+
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/admin', (req, res) => {
-    console.log("Request recieved at '/admin'");
+    activeCookie = req.cookies.session
+    if(!activeCookie){
+        res.redirect('/?message=The+session+has+ended')
+        return
+    }
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
