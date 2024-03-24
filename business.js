@@ -1,15 +1,16 @@
-const persistence = require('./persistence')
+const persistence = require('./persistence');
 
-async function validateCredentials(username, password){
-    let data = await persistence.getUserDetails(username)
-    if (!data || data.password != password) {
-        return false
-    }
-    else {
-        return true
-    }
+async function get_feeding_locations(){
+    return await persistence.get_feeding_locations();
 }
 
 module.exports = {
-    validateCredentials
+    get_feeding_locations
 }
+
+// async function test(){
+//     let locations = await get_feeding_locations();
+//     console.log(await locations);
+// }
+
+// test();
