@@ -1,5 +1,4 @@
 const persistence = require('./persistence')
-const crypto = require('crypto')
 
 async function getUserDetails(username) {
     return await persistence.getUserDetails(username)

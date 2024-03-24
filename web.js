@@ -1,19 +1,20 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const business = require('./business.js');
 const cookieParser = require('cookie-parser')
 const handlebars = require('express-handlebars')
-const multer = require('multer');
+
 const app = express();
 const port = 8000;
 
 
-app.set('views', __dirname + "/template")
+app.set('views', __dirname + "/templates")
 app.set('view engine', 'handlebars')
 app.engine('handlebars', handlebars.engine())
 app.use(bodyParser.urlencoded())
 app.use(cookieParser())
-const upload = multer({ dest: 'uploads/' });
+
 
 app.get('/', async (req, res) => {
     try {
@@ -24,28 +25,6 @@ app.get('/', async (req, res) => {
         console.error(error);
         res.status(500).send('Internal Server Error');
     }
-});
-
-app.get('/feeding', (req, res) => {
-    console.log('GET request received for /feeding');
-    console.log('Feeding Site:', req.body.feedingSite);
-    console.log('Photo:', req.body.photo);
-    console.log('Food & Water Amount Placed:', req.body.foodWaterAmount);
-    console.log('Current Food Amount:', req.body.currentFoodAmount);
-    console.log('Number of Cats:', req.body.numberOfCats);
-    console.log('Health Issue:', req.body.healthIssue);
-    res.send('GET request received for /feeding');
-});
-
-
-app.post('/feeding', upload.single('photo'), (req, res) => {
-    console.log('POST request received for /feeding');
-    console.log('Feeding Site:', req.body.feedingSite);
-    console.log('Photo:', req.file); 
-    console.log('Food & Water Amount Placed:', req.body.foodWaterAmount);
-    console.log('Current Food Amount:', req.body.currentFoodAmount);
-    console.log('Number of Cats:', req.body.numberOfCats);
-    console.log('Health Issue:', req.body.healthIssue);
 });
 
 
@@ -74,6 +53,15 @@ app.post('/login', async (req, res) => {
             res.cookie('session', session_id, {expires: sessionData.Expiry})
             res.redirect('/standard')
         }
+    }
+    else{
+        res.render("login", { 
+            layout: undefined, 
+            errorMessage: "Username DOES NOT EXIST", 
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+        })
     }
 })
 
@@ -112,17 +100,15 @@ app.post('/register', async (req, res) => {
 
 })
 
-app.get('/standard', async (req, res) => {
-    let locationDetails = await business.get_feeding_locations()
-    res.render('fakeUsers', {
-        layout : undefined,
-        locationDetails
-    })
+app.get('/standard', (req, res) => {
+    res.render('fakeUsers', {layout : undefined})
 });
 
+app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/admin', (req, res) => {
-    res.sendFile('./dist/index.html', {root:__dirname});
-})
+    console.log("Request recieved at '/admin'");
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
