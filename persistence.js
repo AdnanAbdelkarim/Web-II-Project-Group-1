@@ -39,6 +39,13 @@ async function getSessionData(key) {
     return result[0]
 }
 
+async function updateSession(key, data) {
+    await connectDatabase()
+    let db = client.db('project_related_database')
+    let session = db.collection('sessions')
+    await session.replaceOne({sessionKey: key}, data)
+}
+
 async function deleteSession(key) {
     await connectDatabase()
     await session.deleteOne({sessionKey: key})
@@ -60,5 +67,5 @@ async function addUser(username, email, password){
 
 
 module.exports = {
-    getUserDetails, saveSession, getSessionData, deleteSession, addUser, get_feeding_locations
+    getUserDetails, saveSession, getSessionData, deleteSession, addUser, get_feeding_locations, updateSession
 }

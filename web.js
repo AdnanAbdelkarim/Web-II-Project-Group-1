@@ -75,7 +75,7 @@ app.post('/register', async (req, res) => {
 
     if(password === reapeatPassword && !user){
         await business.addUser(username, email, password)
-        //res.redirect("/?message=The+account+has+been+created!")
+        res.render('login', {layout: undefined})
     }
     else if (user){
         res.render("register", { 
@@ -119,6 +119,15 @@ app.get('/admin', (req, res) => {
         return
     }
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+app.get('/logout', (req, res) => {
+    activeCookie = req.cookies.session
+    if(activeCookie){
+        business.deleteSession(activeCookie)
+    }
+    res.clearCookie('session')
+    res.redirect('/login')
 });
 
 app.listen(port, () => {
