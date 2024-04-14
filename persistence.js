@@ -5,6 +5,8 @@ let db = undefined
 let users = undefined
 let session = undefined
 let feeding_locations = undefined
+let visit_details = undefined
+let incident_reports = undefined
 
 async function connectDatabase() {
     if (!client) {
@@ -14,6 +16,8 @@ async function connectDatabase() {
         users = db.collection('UserAccounts');
         session = db.collection('sessions')
         feeding_locations = db.collection('feeding_sites');
+        visit_details = db.collection('visit_details');
+        incident_reports = db.collections('incident_reports');
     }
 }
 
@@ -65,7 +69,31 @@ async function addUser(username, email, password){
     await users.insertOne({username: username, password: password, email: email, accountType: "standard"});
 }
 
+async function recordVisit(info){
+    await connectDatabase()
+    let status = await visit_details.insertOne({
+        visitDate: info.visitDate,
+        foodWaterPlaced: info.foodWaterPlaced,
+        currentFoodLevel: info.currentFoodLevel,
+        numberOfCats: info.numberOfCats
+    });
+    return status;
+}
+
+async function recordReport(info){
+    await connectDatabase()
+    let status = await incident_reports.insertOne({
+        reportDate: info.reportDate,
+        issueType: info.issueType,
+        description: info.description,
+        location: info.location
+    });
+    return status;
+}
 
 module.exports = {
-    getUserDetails, saveSession, getSessionData, deleteSession, addUser, get_feeding_locations, updateSession
+    getUserDetails, addUser,
+    saveSession, getSessionData, deleteSession, updateSession,
+    get_feeding_locations,
+    recordVisit, recordReport
 }

@@ -63,6 +63,19 @@ async function cancelCSRFToken(sessionId) {
     await persistence.updateSession(Number(sessionId), sd)
 }
 
+async function visitDetails(info){
+    return await persistence.recordVisit(info)
+}
+
+async function reportDetails(info){
+    return await persistence.recordReport(info)
+}
+
+
 module.exports = {
-    validateCredentials, startSession, getSessionData, deleteSession, addUser, getUserDetails, get_feeding_locations, hashPassword,generateCSRFToken, cancelCSRFToken
+    startSession, getSessionData, deleteSession, 
+    addUser, getUserDetails, 
+    get_feeding_locations, 
+    hashPassword, generateCSRFToken, cancelCSRFToken, validateCredentials, 
+    visitDetails, reportDetails
 }
