@@ -4,9 +4,12 @@ const bodyParser = require('body-parser');
 const business = require('./business.js');
 const cookieParser = require('cookie-parser')
 const handlebars = require('express-handlebars')
-
+const prompt = require('prompt-sync')();
 const app = express();
 const port = 8000;
+const readlineSync = require('readline-sync');
+
+
 
 
 app.set('views', __dirname + "/templates")
@@ -27,13 +30,58 @@ app.get('/', async (req, res) => {
     }
 });
 
+app.get('/register', (req, res) => {
+    res.render('register', {layout: undefined})
+})
+
+app.post('/register', async (req, res) => {
+    let username = req.body.usernameInput
+    let email = req.body.emailInput
+    let password = req.body.passwordInput
+    let reapeatPassword = req.body.passwordrepeatInput
+    
+    user = await business.getUserDetails(username)
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/g.test(password);
+    if(password === reapeatPassword && !user && password.length >= 8 && hasSpecialChar){
+        await business.addUser(username, email, password)
+        res.render('login', {layout: undefined, errorMessage: "Account has been created"})
+    }
+    else if (user){
+        res.render("register", { 
+            layout: undefined, 
+            errorMessage: "Usernsame Already Exists", 
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+            email: email,
+        })
+    }    
+    else if (password.length < 8 || !hasSpecialChar){
+        res.render("register", { 
+            layout: undefined, 
+            errorMessage: "Password must have at least 8 characters & has special character", 
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+            email: email,
+        })
+    }
+    else{
+        res.render("register", { 
+            layout: undefined, 
+            errorMessage: "Passwords do not match!", 
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+            email: email,
+        }) 
+    }
+
+})
+
 
 app.get('/login', (req, res) => {
     res.render('login', {layout: undefined});
-});
-
-app.get('/register', (req, res) => {
-    res.render('register', {layout: undefined});
 });
 
 app.post('/login', async (req, res) => {
@@ -54,7 +102,7 @@ app.post('/login', async (req, res) => {
             res.redirect('/standard')
         }
     }
-    else{
+    else if (!valid){
         res.render("login", { 
             layout: undefined, 
             errorMessage: "Username DOES NOT EXIST", 
@@ -63,42 +111,11 @@ app.post('/login', async (req, res) => {
             username: username,
         })
     }
-})
-
-app.post('/register', async (req, res) => {
-    let username = req.body.usernameInput
-    let email = req.body.emailInput
-    let password = req.body.passwordInput
-    let reapeatPassword = req.body.passwordrepeatInput
-    
-    user = await business.getUserDetails(username)
-
-    if(password === reapeatPassword && !user){
-        await business.addUser(username, email, password)
-        res.render('login', {layout: undefined})
-    }
-    else if (user){
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Usernsame Already Exists", 
-            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
-            // and display error message
-            username: username,
-            email: email,
-        })
-    }    
     else{
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Passwords do not match", 
-            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
-            // and display error message
-            username: username,
-            email: email,
-        })
+        res.render('404', {layout: undefined})
     }
-
 })
+
 
 app.get('/standard', (req, res) => {
     activeCookie = req.cookies.session
@@ -120,6 +137,45 @@ app.get('/admin', (req, res) => {
     }
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
+
+app.get('/resetpassword', async (req, res) => {
+    res.render('resetpassword', {layout: undefined})
+})
+
+app.post('/resetpassword', async (req, res) => {
+    const email = req.body.email;
+    const userEmail = await business.getUserbyEmail(email);
+
+    if (!userEmail) {
+        return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
+    }
+    else{
+        res.cookie('tempCookie', userEmail.email, {layout: false})// need to make sure that the cookie is being created correctly
+        res.redirect('/passwordreset')
+    }
+});
+
+app.get('/passwordreset', (req, res) => {
+    res.render('passwordreset', {layout: undefined})
+})
+
+app.post('/passwordreset', async (req, res) => {
+    console.log(res.cookie.tempCookie)// need to get the email from the cookie
+    newPass = req.body.passwordInput
+    newPassRepeated = req.body.passwordrepeatInput
+    passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
+    if(!passwordvalidation){
+        res.render("passwordresettempCookie",
+        { layout: undefined, errorMessage: "Password should contain at least 8 characters and have a special character" });
+    }
+    else{
+        await business.updatePassword(newPassRepeated)
+        console.log("PASSWORD CHANGED,,,", newPass)
+
+        res.redirect('/login')
+    }
+})
+
 
 app.get('/logout', (req, res) => {
     activeCookie = req.cookies.session

@@ -27,6 +27,17 @@ async function getUserDetails(username) {
     }
 }
 
+
+async function getUserbyEmail(email){
+    await connectDatabase()
+        if(users){
+            let emailInfo = await users.findOne({'email': email})
+            if (emailInfo == null) return undefined;
+            else return emailInfo;
+        }
+    
+}
+
 async function saveSession(uuid, expiry, data) {
     await connectDatabase()
     await session.insertOne({sessionKey: uuid, Expiry: expiry, Data: data})
@@ -45,6 +56,15 @@ async function updateSession(key, data) {
     let session = db.collection('sessions')
     await session.replaceOne({sessionKey: key}, data)
 }
+
+async function updatePassword(email, password){
+    await connectDatabase()
+    let db = client.db('project_related_database')
+    let user = db.collection('UserAccounts')
+    await user.updateOne({'email': email}, {$set: {'password': password}})
+}
+
+
 
 async function deleteSession(key) {
     await connectDatabase()
@@ -65,7 +85,34 @@ async function addUser(username, email, password){
     await users.insertOne({username: username, password: password, email: email, accountType: "standard"});
 }
 
+async function recordVisit(info){
+    await connectDatabase()
+    let status = await visit_details.insertOne({
+        visitDate: info.visitDate,
+        foodWaterPlaced: info.foodWaterPlaced,
+        currentFoodLevel: info.currentFoodLevel,
+        numberOfCats: info.numberOfCats
+    });
+    return status;
+}
+
+async function recordReport(info){
+    await connectDatabase()
+    let status = await incident_reports.insertOne({
+        reportDate: info.reportDate,
+        issueType: info.issueType,
+        description: info.description,
+        location: info.location
+    });
+    return status;
+}
+
 
 module.exports = {
-    getUserDetails, saveSession, getSessionData, deleteSession, addUser, get_feeding_locations, updateSession
+    getUserDetails, saveSession, 
+    getSessionData, deleteSession, 
+    addUser, get_feeding_locations, 
+    updateSession, getUserbyEmail, 
+    updatePassword, recordVisit, 
+    recordReport
 }
