@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 const business = require('./business.js');
 const cookieParser = require('cookie-parser')
 const handlebars = require('express-handlebars')
-const prompt = require('prompt-sync')();
 const app = express();
 const port = 8000;
-const readlineSync = require('readline-sync');
+
 
 
 
@@ -144,14 +143,18 @@ app.get('/resetpassword', async (req, res) => {
 
 app.post('/resetpassword', async (req, res) => {
     const email = req.body.email;
+    // console.log(email)
     const userEmail = await business.getUserbyEmail(email);
+    // console.log(userEmail)
 
     if (!userEmail) {
         return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
     }
-    else{
-        res.cookie('tempCookie', userEmail.email, {layout: false})// need to make sure that the cookie is being created correctly
-        res.redirect('/passwordreset')
+    else {
+        res.cookie('tempCookie', email); // Set the cookie
+        // console.log(res.cookie.tempCookie)
+        console.log("Cookie set successfully");
+        res.redirect('/passwordreset'); // Redirect to a route where you can check the cookie
     }
 });
 
@@ -160,17 +163,18 @@ app.get('/passwordreset', (req, res) => {
 })
 
 app.post('/passwordreset', async (req, res) => {
-    console.log(res.cookie.tempCookie)// need to get the email from the cookie
+    const email = req.cookies.tempCookie
+    // console.log(email)
     newPass = req.body.passwordInput
     newPassRepeated = req.body.passwordrepeatInput
     passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
     if(!passwordvalidation){
-        res.render("passwordresettempCookie",
-        { layout: undefined, errorMessage: "Password should contain at least 8 characters and have a special character" });
+        res.render("passwordreset",
+        { layout: undefined, errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
     }
     else{
-        await business.updatePassword(newPassRepeated)
-        console.log("PASSWORD CHANGED,,,", newPass)
+        await business.updatePassword(email, newPass)
+        console.log("PASSWORD CHANGED :)", newPass)
 
         res.redirect('/login')
     }
