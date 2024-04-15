@@ -68,6 +68,7 @@ async function get_feeding_locations(){
 function salted_hashed_password(password){
     let salt = crypto.randomBytes(16).toString('hex');
     secure_password =  salt + crypto.createHash('sha256').update(password).digest('base64');
+    console.log(secure_password)
     return `${salt}:${secure_password}`;
 }
 async function generateCSRFToken(sessionId) {
