@@ -86,8 +86,6 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     let username = req.body.usernameInput
     let password = req.body.passwordInput
-    console.log(username)
-    console.log(password)
     let valid = await business.validateCredentials(username, password)
     if (valid) {
         let session_id = await business.startSession({userName: username, accountType: valid})
@@ -143,17 +141,13 @@ app.get('/resetpassword', async (req, res) => {
 
 app.post('/resetpassword', async (req, res) => {
     const email = req.body.email;
-    // console.log(email)
     const userEmail = await business.getUserbyEmail(email);
-    // console.log(userEmail)
 
     if (!userEmail) {
         return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
     }
     else {
         res.cookie('tempCookie', email); // Set the cookie
-        // console.log(res.cookie.tempCookie)
-        console.log("Cookie set successfully");
         res.redirect('/passwordreset'); // Redirect to a route where you can check the cookie
     }
 });
@@ -164,7 +158,6 @@ app.get('/passwordreset', (req, res) => {
 
 app.post('/passwordreset', async (req, res) => {
     const email = req.cookies.tempCookie
-    // console.log(email)
     newPass = req.body.passwordInput
     newPassRepeated = req.body.passwordrepeatInput
     passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
@@ -174,7 +167,7 @@ app.post('/passwordreset', async (req, res) => {
     }
     else{
         await business.updatePassword(email, newPass)
-        console.log("PASSWORD CHANGED :)", newPass)
+        res.clearCookie('tempCookie')
 
         res.redirect('/login')
     }
