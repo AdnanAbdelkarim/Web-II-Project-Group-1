@@ -1,6 +1,6 @@
 const persistence = require('./persistence')
 const crypto = require('crypto')
-//alanood & Abdullatif
+
 
 async function getUserDetails(username) {
     return await persistence.getUserDetails(username)
