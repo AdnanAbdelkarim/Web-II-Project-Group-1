@@ -30,6 +30,14 @@ async function getUserDetails(username) {
     }
 }
 
+async function getPosts() {
+    await connectDatabase()
+    if (posts) {
+        let allposts = await posts.find({}).toArray()    
+        return allposts; // returning userInfo regardless of account lock status
+    }
+}
+
 
 async function getUserbyEmail(email) {
     await connectDatabase()
@@ -122,5 +130,5 @@ module.exports = {
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
     updatePassword, recordVisit,
-    recordReport, createPost
+    recordReport, createPost, getPosts
 }

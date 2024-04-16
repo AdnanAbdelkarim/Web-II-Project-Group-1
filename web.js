@@ -123,13 +123,22 @@ app.get('/standard', (req, res) => {
     res.render('fakeUsers', { layout: undefined })
 })
 
+app.get('/posts', async (req, res) => {
+    let all_posts = await business.getPosts()
 
-// api to create post
-app.use(bodyParser.json());
-app.get('/create_post', async (req, res) => {
+    activeCookie = req.cookies.session
+    if (!activeCookie) {
+        res.redirect('/?message=The+session+has+ended')
+        return
+    }
+    res.render('posts', { layout: undefined, posts: all_posts })
+});
+// // api to create post
+// app.use(bodyParser.json());
+app.post('/posts', async (req, res) => {
     // get the data
     let textContent = req.body.textContent
-
+   
     // validate the data
     let errors = []
     if (!textContent) {
@@ -140,15 +149,13 @@ app.get('/create_post', async (req, res) => {
     }
 
     if (errors.length !== 0) {
-        res.json(errors)
+        let all_posts = await business.getPosts()
+        res.render('posts', { layout: undefined, errors, posts: all_posts})
     }
     // Save to db
     await business.createPost(textContent)
-
-    res.json({
-        textContent,
-        message: 'saved',
-    })
+    let all_posts = await business.getPosts()
+    res.render('posts', { layout: undefined, success: 'New Post Added Successfully', posts: all_posts })
 })
 
 app.use(express.static(path.join(__dirname, 'dist')));
