@@ -173,6 +173,14 @@ app.post('/passwordreset', async (req, res) => {
     }
 })
 
+async function error404(req, res){
+    res.status(404).render("404", {
+        layout: undefined
+    })
+}
+
+// Middleware for handling 404 errors (page not found) 
+app.use(error404)
 
 app.get('/logout', (req, res) => {
     activeCookie = req.cookies.session
