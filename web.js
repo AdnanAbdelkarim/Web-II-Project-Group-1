@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('register', {layout: undefined})
+    res.render('register', { layout: undefined })
 })
 
 app.post('/register', async (req, res) => {
@@ -38,49 +38,49 @@ app.post('/register', async (req, res) => {
     let email = req.body.emailInput
     let password = req.body.passwordInput
     let reapeatPassword = req.body.passwordrepeatInput
-    
+
     user = await business.getUserDetails(username)
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/g.test(password);
-    if(password === reapeatPassword && !user && password.length >= 8 && hasSpecialChar){
+    if (password === reapeatPassword && !user && password.length >= 8 && hasSpecialChar) {
         await business.addUser(username, email, password)
-        res.render('login', {layout: undefined, errorMessage: "Account has been created"})
+        res.render('login', { layout: undefined, errorMessage: "Account has been created" })
     }
-    else if (user){
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Usernsame Already Exists", 
-            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
-            // and display error message
-            username: username,
-            email: email,
-        })
-    }    
-    else if (password.length < 8 || !hasSpecialChar){
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Password must have at least 8 characters & has special character", 
+    else if (user) {
+        res.render("register", {
+            layout: undefined,
+            errorMessage: "Usernsame Already Exists",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
             email: email,
         })
     }
-    else{
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Passwords do not match!", 
+    else if (password.length < 8 || !hasSpecialChar) {
+        res.render("register", {
+            layout: undefined,
+            errorMessage: "Password must have at least 8 characters & has special character",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
             email: email,
-        }) 
+        })
+    }
+    else {
+        res.render("register", {
+            layout: undefined,
+            errorMessage: "Passwords do not match!",
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+            email: email,
+        })
     }
 
 })
 
 
 app.get('/login', (req, res) => {
-    res.render('login', {layout: undefined});
+    res.render('login', { layout: undefined });
 });
 
 app.post('/login', async (req, res) => {
@@ -88,47 +88,73 @@ app.post('/login', async (req, res) => {
     let password = req.body.passwordInput
     let valid = await business.validateCredentials(username, password)
     if (valid) {
-        let session_id = await business.startSession({userName: username, accountType: valid})
+        let session_id = await business.startSession({ userName: username, accountType: valid })
         let sessionData = await business.getSessionData(session_id)
-        if(valid === 'admin'){
-            res.cookie('session', session_id, {expires: sessionData.Expiry})
+        if (valid === 'admin') {
+            res.cookie('session', session_id, { expires: sessionData.Expiry })
             res.redirect('/admin')
         }
-        else if(valid === 'standard'){
-            res.cookie('session', session_id, {expires: sessionData.Expiry})
+        else if (valid === 'standard') {
+            res.cookie('session', session_id, { expires: sessionData.Expiry })
             res.redirect('/standard')
         }
     }
-    else if (!valid){
-        res.render("login", { 
-            layout: undefined, 
-            errorMessage: "Username DOES NOT EXIST", 
+    else if (!valid) {
+        res.render("login", {
+            layout: undefined,
+            errorMessage: "Username DOES NOT EXIST",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
         })
     }
-    else{
-        res.render('404', {layout: undefined})
+    else {
+        res.render('404', { layout: undefined })
     }
 })
 
 
 app.get('/standard', (req, res) => {
     activeCookie = req.cookies.session
-    if(!activeCookie){
+    if (!activeCookie) {
         res.redirect('/?message=The+session+has+ended')
         return
     }
-    res.render('fakeUsers', {layout : undefined})
+    res.render('fakeUsers', { layout: undefined })
 })
-    
 
+
+// api to create post
+app.use(bodyParser.json());
+app.get('/create_post', async (req, res) => {
+    // get the data
+    let textContent = req.body.textContent
+
+    // validate the data
+    let errors = []
+    if (!textContent) {
+        errors.push('Please enter a textContent')
+    }
+    if (textContent.length > 100) {
+        errors.push('Text Content cannot be more than 100 letters')
+    }
+
+    if (errors.length !== 0) {
+        res.json(errors)
+    }
+    // Save to db
+    await business.createPost(textContent)
+
+    res.json({
+        textContent,
+        message: 'saved',
+    })
+})
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/admin', (req, res) => {
     activeCookie = req.cookies.session
-    if(!activeCookie){
+    if (!activeCookie) {
         res.redirect('/?message=The+session+has+ended')
         return
     }
@@ -136,7 +162,7 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/resetpassword', async (req, res) => {
-    res.render('resetpassword', {layout: undefined})
+    res.render('resetpassword', { layout: undefined })
 })
 
 app.post('/resetpassword', async (req, res) => {
@@ -153,7 +179,7 @@ app.post('/resetpassword', async (req, res) => {
 });
 
 app.get('/passwordreset', (req, res) => {
-    res.render('passwordreset', {layout: undefined})
+    res.render('passwordreset', { layout: undefined })
 })
 
 app.post('/passwordreset', async (req, res) => {
@@ -161,11 +187,11 @@ app.post('/passwordreset', async (req, res) => {
     newPass = req.body.passwordInput
     newPassRepeated = req.body.passwordrepeatInput
     passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
-    if(!passwordvalidation){
+    if (!passwordvalidation) {
         res.render("passwordreset",
-        { layout: undefined, errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
+            { layout: undefined, errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
     }
-    else{
+    else {
         await business.updatePassword(email, newPass)
         res.clearCookie('tempCookie')
 
@@ -173,7 +199,7 @@ app.post('/passwordreset', async (req, res) => {
     }
 })
 
-async function error404(req, res){
+async function error404(req, res) {
     res.status(404).render("404", {
         layout: undefined
     })
@@ -184,7 +210,7 @@ app.use(error404)
 
 app.get('/logout', (req, res) => {
     activeCookie = req.cookies.session
-    if(activeCookie){
+    if (activeCookie) {
         business.deleteSession(activeCookie)
     }
     res.clearCookie('session')

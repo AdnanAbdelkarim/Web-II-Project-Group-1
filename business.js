@@ -60,6 +60,10 @@ async function addUser(username, email, password){
     await persistence.addUser(username, email, salted_hashed_password(password))
 }
 
+async function createPost(textContent){
+    await persistence.createPost(textContent)
+}
+
 async function get_feeding_locations(){
     return await persistence.get_feeding_locations();
 }
@@ -102,5 +106,5 @@ module.exports = {
     generateCSRFToken, cancelCSRFToken,
     getUserbyEmail, updatePassword, 
     salted_hashed_password, passwordvalidity, 
-    visitDetails, reportDetails
+    visitDetails, reportDetails, createPost
 }
