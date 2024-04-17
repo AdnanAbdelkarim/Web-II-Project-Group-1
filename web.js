@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 const handlebars = require('express-handlebars')
 const app = express();
 const port = 8000;
+const fileUpload = require('express-fileupload');
 
 app.set('views', __dirname + "/templates")
 app.set('view engine', 'handlebars')
@@ -19,7 +20,7 @@ app.get('/', async (req, res) => {
         let data = await business.get_feeding_locations();
         res.render('public-viewers', { layout: undefined, locations: data });
     } catch (error) {
-        res.render('404', {layout: undefined})
+        res.render('404', { layout: undefined })
     }
 });
 
@@ -57,9 +58,9 @@ app.post('/register', async (req, res) => {
             email: email,
         });
     } else if (password !== repeatPassword) {
-        res.render("register", { 
-            layout: undefined, 
-            errorMessage: "Passwords do not match!", 
+        res.render("register", {
+            layout: undefined,
+            errorMessage: "Passwords do not match!",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
@@ -141,12 +142,18 @@ app.get('/posts', async (req, res) => {
     }
     res.render('posts', { layout: undefined, posts: all_posts })
 });
-// // api to create post
-// app.use(bodyParser.json());
+
+
+app.use(fileUpload())
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.post('/posts', async (req, res) => {
     // get the data
     let textContent = req.body.textContent
-   
+    let postPic = req.files.post_pic
+
+    let filePath = `/assets/${Date.now()}_${postPic.name}`
+    await postPic.mv(`${__dirname}${filePath}`)
+
     // validate the data
     let errors = []
     if (!textContent) {
@@ -158,10 +165,10 @@ app.post('/posts', async (req, res) => {
 
     if (errors.length !== 0) {
         let all_posts = await business.getPosts()
-        res.render('posts', { layout: undefined, errors, posts: all_posts})
+        res.render('posts', { layout: undefined, errors, posts: all_posts })
     }
     // Save to db
-    await business.createPost(textContent)
+    await business.createPost(textContent, filePath)
     let all_posts = await business.getPosts()
     res.render('posts', { layout: undefined, success: 'New Post Added Successfully', posts: all_posts })
 })
@@ -200,13 +207,13 @@ app.post('/resetpassword', async (req, res) => {
     if (!userEmail) {
         return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
     }
-    else if(userEmail) {
+    else if (userEmail) {
         res.cookie('tempCookie', email); // Set the cookie
         console.log("An email has been sent to", email, "to reset your password")
         res.redirect('/passwordreset'); // Redirect to a route where you can check the cookie
     }
-    else{
-        res.render('404', {layout: undefined})
+    else {
+        res.render('404', { layout: undefined })
     }
 });
 
@@ -228,10 +235,11 @@ app.post('/passwordreset', async (req, res) => {
         console.log("The password has been changed")
         res.clearCookie('tempCookie')
 
-        res.render('login', 
-        {layout: undefined,
-        errorMessage: "The password has been reset successfully"
-        })
+        res.render('login',
+            {
+                layout: undefined,
+                errorMessage: "The password has been reset successfully"
+            })
     }
 })
 
@@ -250,7 +258,7 @@ app.get('/logout', async (req, res) => {
     res.redirect('/login');
 });
 
-async function error404(req, res){
+async function error404(req, res) {
     res.status(404).render("404", {
         layout: undefined
     })

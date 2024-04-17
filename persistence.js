@@ -108,9 +108,9 @@ async function addUser(username, email, password) {
     await users.insertOne({ username: username, password: password, email: email, accountType: "standard" });
 }
 
-async function createPost(textContent) {
+async function createPost(textContent, filePath) {
     await connectDatabase()
-    await posts.insertOne({ textContent: textContent });
+    await posts.insertOne({ textContent, filePath });
 }
 
 async function recordVisit(info) {

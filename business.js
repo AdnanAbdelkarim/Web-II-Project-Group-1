@@ -64,8 +64,8 @@ async function addUser(username, email, password){
     await persistence.addUser(username, email, salted_hashed_password(password))
 }
 
-async function createPost(textContent){
-    await persistence.createPost(textContent)
+async function createPost(textContent, filePath){
+    await persistence.createPost(textContent, filePath)
 }
 
 async function get_feeding_locations(){

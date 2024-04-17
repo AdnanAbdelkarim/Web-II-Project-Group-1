@@ -36,13 +36,18 @@
         </div>
         {{/if}}
 
-
-        <form action="/posts" method="post">
+        <form action="/posts" method="post" enctype="multipart/form-data">
             <div class="form-floating">
                 <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                     style="height: 100px" name="textContent"></textarea>
                 <label for="floatingTextarea2">Add your text here</label>
             </div>
+
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Upload Picture</label>
+                <input class="form-control" name="post_pic" type="file" id="formFile">
+            </div>
+
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
 
         </form>
@@ -54,7 +59,15 @@
             {{#if posts}}
             <ul class="people_list">
                 {{#each posts}}
-                <li>{{this.textContent}}</li>
+                <div class="border border-primary mb-5">
+                    {{#if this.textContent}}
+                    <li>{{this.textContent}}</li>
+                    {{/if}}
+
+                    {{#if this.filePath}}
+                    <li> <img style="width: 300px;" src="{{this.filePath}}" alt=""> </li>
+                    {{/if}}
+                </div>
                 {{/each}}
             </ul>
             {{/if}}
