@@ -7,10 +7,6 @@ const handlebars = require('express-handlebars')
 const app = express();
 const port = 8000;
 
-
-
-
-
 app.set('views', __dirname + "/templates")
 app.set('view engine', 'handlebars')
 app.engine('handlebars', handlebars.engine())
@@ -23,9 +19,7 @@ app.get('/', async (req, res) => {
         let data = await business.get_feeding_locations();
         res.render('public-viewers', { layout: undefined, locations: data });
     } catch (error) {
-        // Handle error appropriately, e.g., log it or send an error response
-        console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.render('404', {layout: undefined})
     }
 });
 
@@ -55,10 +49,17 @@ app.post('/register', async (req, res) => {
             email: email,
         })
     }
+<<<<<<< Updated upstream
     else if (password.length < 8 || !hasSpecialChar) {
         res.render("register", {
             layout: undefined,
             errorMessage: "Password must have at least 8 characters & has special character",
+=======
+    else if(password !== reapeatPassword){
+        res.render("register", { 
+            layout: undefined, 
+            errorMessage: "Passwords do not match!", 
+>>>>>>> Stashed changes
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
@@ -74,6 +75,9 @@ app.post('/register', async (req, res) => {
             username: username,
             email: email,
         })
+    }
+    else{
+        res.render('404', {layout: undefined})
     }
 
 })
@@ -114,10 +118,20 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.get('/standard', (req, res) => {
+app.get('/standard', async(req, res) => {
     activeCookie = req.cookies.session
+<<<<<<< Updated upstream
     if (!activeCookie) {
         res.redirect('/?message=The+session+has+ended')
+=======
+    if(!activeCookie){
+        let data = await business.get_feeding_locations();
+        res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        })
+>>>>>>> Stashed changes
         return
     }
     res.render('fakeUsers', { layout: undefined })
@@ -159,13 +173,29 @@ app.post('/posts', async (req, res) => {
 })
 
 app.use(express.static(path.join(__dirname, 'dist')));
-app.get('/admin', (req, res) => {
+app.get('/admin', async (req, res) => {
     activeCookie = req.cookies.session
+<<<<<<< Updated upstream
     if (!activeCookie) {
         res.redirect('/?message=The+session+has+ended')
+=======
+    if(!activeCookie){
+        //res.redirect('/?message=The+session+has+ended')
+        let data = await business.get_feeding_locations();
+        res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        })
+>>>>>>> Stashed changes
         return
     }
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    //res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    const fixed_locations = await business.get_feeding_locations()
+    res.render('admin', {
+        layout: undefined,
+        locations: fixed_locations
+    })
 });
 
 app.get('/resetpassword', async (req, res) => {
@@ -179,9 +209,12 @@ app.post('/resetpassword', async (req, res) => {
     if (!userEmail) {
         return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
     }
-    else {
+    else if(userEmail) {
         res.cookie('tempCookie', email); // Set the cookie
         res.redirect('/passwordreset'); // Redirect to a route where you can check the cookie
+    }
+    else{
+        res.render('404', {layout: undefined})
     }
 });
 
@@ -200,6 +233,7 @@ app.post('/passwordreset', async (req, res) => {
     }
     else {
         await business.updatePassword(email, newPass)
+        console.log("The password has been changed")
         res.clearCookie('tempCookie')
 
         res.redirect('/login')
@@ -223,6 +257,11 @@ app.get('/logout', (req, res) => {
     res.clearCookie('session')
     res.redirect('/login')
 });
+
+async function error404(req, res){
+    res.status(404).render('404')
+}
+app.get('*', error404);
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

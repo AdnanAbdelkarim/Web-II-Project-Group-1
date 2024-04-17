@@ -90,6 +90,18 @@ async function get_feeding_locations() {
     }
     return undefined;
 }
+//For Member
+async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
+    let feeding_locations = db.collection('feeding_sites');
+    await feeding_locations.updateOne({"number": number},
+    {$set:{
+        "food_level": food_level,
+        "water_level": water_level,
+        "cat_number": cat_number,
+        "health_issues": health_issues,
+        "status": status
+    }})
+}
 
 async function addUser(username, email, password) {
     await connectDatabase()
@@ -125,10 +137,19 @@ async function recordReport(info) {
 
 
 module.exports = {
+<<<<<<< Updated upstream
     getUserDetails, saveSession,
     getSessionData, deleteSession,
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
     updatePassword, recordVisit,
     recordReport, createPost, getPosts
+=======
+    getUserDetails, saveSession, 
+    getSessionData, deleteSession, 
+    addUser, get_feeding_locations, 
+    updateSession, getUserbyEmail, 
+    updatePassword, recordVisit, 
+    recordReport, update_feeding_locations
+>>>>>>> Stashed changes
 }
