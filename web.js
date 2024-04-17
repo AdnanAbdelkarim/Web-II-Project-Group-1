@@ -156,12 +156,25 @@ app.post('/posts', async (req, res) => {
 
     // validate the data
     let errors = []
+
+    // validate post text
     if (!textContent) {
-        errors.push('Please enter a textContent')
+        errors.push('Please enter a Text Content')
     }
     if (textContent.length > 100) {
         errors.push('Text Content cannot be more than 100 letters')
     }
+
+    // validate picture/ file upload 
+    if (!['image/jpeg', 'image/png', 'image/jpeg'].includes(postPic.mimetype)) {
+        errors.push('Only JPEG, PNG, and JPG files are allowed')
+    }
+
+    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+    if (postPic.size > maxSize) {
+      return res.status(400).send('File size exceeds the limit (1MB)');
+    }
+
 
     if (errors.length !== 0) {
         let all_posts = await business.getPosts()
