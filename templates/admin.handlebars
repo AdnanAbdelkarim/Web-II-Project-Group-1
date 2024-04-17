@@ -1,247 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta tags for character encoding and viewport settings -->
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Meta tags for the page's content and author -->
-    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
-    <meta name="author" content="Łukasz Holeczek">
-    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-
-    <!-- Link to CoreUI CSS styles with integrity for security and cross-origin attribute -->
-    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.3.2/dist/css/coreui.min.css" rel="stylesheet" integrity="sha384-H8oVKJOQVGGCdfFNM+9gLKN0xagtq9oiNLirmijheEuqD3kItTbTvoOGgxVKqNiB" crossorigin="anonymous">
-
-    <!-- Favicon links for various icon sizes -->
-    <link rel="apple-touch-icon" sizes="57x57" href="assets/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="assets/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-icon-180x180.png">
-
-    <!-- Favicon links for various icon sizes -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-
-    <!-- Link to the manifest file for a progressive web app -->
-    <link rel="manifest" href="assets/favicon/manifest.json">
-
-    <!-- Meta tags for Microsoft application compatibility -->
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- Vendors styles-->
-    <link rel="stylesheet" href="vendors/simplebar/css/simplebar.css">
-    <link rel="stylesheet" href="css/vendors/simplebar.css">
-
-    <!-- Main styles for this application-->
-    <link href="css/style.css" rel="stylesheet">
-
-    <!-- We use those styles to show code examples, you should remove them in your application.-->
-    <link href="css/examples.css" rel="stylesheet">
-
-    <!-- Leaflet Maps.-->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""/>
-
-    <!-- Page title -->
     <title>Admin Dashboard</title>
-</head>
+    <style>
+        .container-fluid {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
 
-<style>
-  /* Add some general padding and define a max-width for the container */
-.container-fluid {
-  padding: 2rem;
-  max-width: 1200px; /* Adjust this as needed for your layout */
-  margin: auto; /* This centers the container */
-}
-
-/* Style for each row */
-.row {
-  margin-bottom: 1.5rem; /* Adds space between rows */
-}
-
-/* Adding padding and border to the image container */
-.col-md-6:first-child {
-  padding: 1rem;
-  border-right: 2px solid #dee2e6; /* A light grey border */
-}
-
-/* Padding for the content in the second column */
-.col-md-6:last-child {
-  padding: 1rem;
-}
-
-/* Style for the heading of sections */
-h2 {
-  border-bottom: 2px solid #dee2e6; /* A light grey border */
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* Style for buttons to give them some space */
-.btn {
-  margin-top: 1rem;
-}
-
-/* Add some padding and define a more distinct style for the signup section */
-#location-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-}
-
-/* Styling for the location list */
-#location-list li {
-  background: #f7f7f7;
-  border: 1px solid #ddd;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Styling for sections such as about us and sign up */
-.about-us,
-.signup-section {
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 0.25rem;
-}
-
-/* Heading styling for the about us and sign up sections */
-.about-us h2,
-.signup-section h3 {
-  margin-top: 0;
-}
-
-  /* Map styling */
-  #map {
-    width: 45%; /* Responsive width */
-    height: 400px; /* Fixed height, adjust as necessary */
-    margin-top: 1rem; /* Add some space above the map */
-  }
-
-  /* Navigation bar styling */
-  nav {
-    background-color: #3c40ff;
-    overflow: hidden;
-  }
-
-  /* Navigation link styling */
-  nav a {
-    float: left;
-    display: block;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-  }
-
-  /* Hover effect for navigation links */
-  nav a:hover {
-    background-color: #ddd;
-    color: blue;
-  } 
-
-          table {
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: center;
         }
+
         th {
             background-color: #f2f2f2;
             font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
         }
+
         td {
             background-color: #fff;
+            color: #555;
         }
-</style>
 
+        nav {
+            background-color: #3c40ff;
+            overflow: hidden;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        nav li {
+            float: left;
+        }
+
+        nav a {
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: blue;
+        }
+    </style>
+</head>
 <body class="c-app">
-  <!-- CoreUI Header --> 
-  <header class="c-header c-header-light c-header-fixed">
-          <div class="welcome-section">
+    <header class="c-header c-header-light c-header-fixed">
+        <div class="welcome-section">
             <h3>This is the Admin page</h3>
-          </div>
-  <!-- Navigation links -->
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" href="/">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/posts">Posts</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/">About Us</a>
-    </li>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/posts">Posts</a></li>
+                <li><a href="/">About Us</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <li class="nav-item">
-      <a href="/logout" class="nav-link">Log Out</a>
-    </li>
-</ul>
-</header>
-
-<!-- Main application body -->
-<div class="c-body">
-  <main class="c-main">
-    <!-- Container for the main content -->
-    <div class="container-fluid">
-          <div>
-          </div>
-            <div>
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
                 <table>
-                    <tr>
-                        <th>Feeding Station Number</th>
-                        <th>Feeding Station</th>
-                        <th>Location</th>
-                        <th>Food Level</th>
-                        <th>Water Level</th>
-                        <th>Urgent Items</th>
-                        <th>Num of Cats</th>
-                        <th>Health Issues</th>
-                        <th>Status</th>
-                    </tr>
-                    {{#each locations}}
-                    <tr>
-                        <td>{{this.number}}</td>
-                        <td>{{this.name}}</td>
-                        <td><a href="{{this.location}}">{{this.location}}</a></td>
-                        <td>{{this.food_level}}</td>
-                        <td>{{this.water_level}}</td>
-                        <td>{{this.urgent_items}}</td>
-                        <td>{{this.cat_number}}</td>
-                        <td>{{this.health_issues}}</td>
-                        <td>{{this.status}}</td>
-                    </tr>
-                    {{/each}}
+                    <thead>
+                        <tr>
+                            <th>Feeding Station Number</th>
+                            <th>Feeding Station</th>
+                            <th>Location</th>
+                            <th>Food Level</th>
+                            <th>Water Level</th>
+                            <th>Urgent Items</th>
+                            <th>Num of Cats</th>
+                            <th>Health Issues</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each locations}}
+                        <tr>
+                            <td>{{this.number}}</td>
+                            <td>{{this.name}}</td>
+                            <td><a href="{{this.location}}">{{this.location}}</a></td>
+                            <td>{{this.food_level}}</td>
+                            <td>{{this.water_level}}</td>
+                            <td>{{this.urgent_items}}</td>
+                            <td>{{this.cat_number}}</td>
+                            <td>{{this.health_issues}}</td>
+                            <td>{{this.status}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
                 </table>
             </div>
-
-
+        </main>
     </div>
-  </main>
-</div>
-  <!-- CoreUI Scripts -->
-  <script src="vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
-  <script src="vendors/simplebar/js/simplebar.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
 </body>
 </html>

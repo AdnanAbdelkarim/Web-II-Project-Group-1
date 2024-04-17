@@ -28,59 +28,55 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', async (req, res) => {
-    let username = req.body.usernameInput
-    let email = req.body.emailInput
-    let password = req.body.passwordInput
-    let reapeatPassword = req.body.passwordrepeatInput
+    let username = req.body.usernameInput;
+    let email = req.body.emailInput;
+    let password = req.body.passwordInput;
+    let repeatPassword = req.body.passwordrepeatInput;
 
-    user = await business.getUserDetails(username)
+    user = await business.getUserDetails(username);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/g.test(password);
-    if (password === reapeatPassword && !user && password.length >= 8 && hasSpecialChar) {
-        await business.addUser(username, email, password)
-        res.render('login', { layout: undefined, errorMessage: "Account has been created" })
-    }
-    else if (user) {
+    if (password === repeatPassword && !user && password.length >= 8 && hasSpecialChar) {
+        await business.addUser(username, email, password);
+        res.render('login', { layout: undefined, errorMessage: "Account has been created" });
+    } else if (user) {
         res.render("register", {
             layout: undefined,
-            errorMessage: "Usernsame Already Exists",
+            errorMessage: "Username Already Exists",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
             email: email,
-        })
-    }
-<<<<<<< Updated upstream
-    else if (password.length < 8 || !hasSpecialChar) {
+        });
+    } else if (password.length < 8 || !hasSpecialChar) {
         res.render("register", {
             layout: undefined,
-            errorMessage: "Password must have at least 8 characters & has special character",
-=======
-    else if(password !== reapeatPassword){
+            errorMessage: "Password must have at least 8 characters and contain a special character",
+            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
+            // and display error message
+            username: username,
+            email: email,
+        });
+    } else if (password !== repeatPassword) {
         res.render("register", { 
             layout: undefined, 
             errorMessage: "Passwords do not match!", 
->>>>>>> Stashed changes
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
             email: email,
-        })
-    }
-    else {
+        });
+    } else {
         res.render("register", {
             layout: undefined,
-            errorMessage: "Passwords do not match!",
+            errorMessage: "An error occurred",
             // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
             // and display error message
             username: username,
             email: email,
-        })
+        });
     }
-    else{
-        res.render('404', {layout: undefined})
-    }
+});
 
-})
 
 
 app.get('/login', (req, res) => {
@@ -118,24 +114,22 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.get('/standard', async(req, res) => {
-    activeCookie = req.cookies.session
-<<<<<<< Updated upstream
+app.get('/standard', async (req, res) => {
+    const activeCookie = req.cookies.session;
     if (!activeCookie) {
-        res.redirect('/?message=The+session+has+ended')
-=======
-    if(!activeCookie){
-        let data = await business.get_feeding_locations();
-        res.render('public-viewers', {
+        return res.redirect('/?message=The+session+has+ended');
+    }
+    const data = await business.get_feeding_locations();
+    if (!data) {
+        return res.render('public-viewers', {
             layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: data
-        })
->>>>>>> Stashed changes
-        return
+            locations: []
+        });
     }
-    res.render('fakeUsers', { layout: undefined })
-})
+    res.render('fakeUsers', { layout: undefined });
+});
+
 
 app.get('/posts', async (req, res) => {
     let all_posts = await business.getPosts()
@@ -173,30 +167,27 @@ app.post('/posts', async (req, res) => {
 })
 
 app.use(express.static(path.join(__dirname, 'dist')));
+
 app.get('/admin', async (req, res) => {
-    activeCookie = req.cookies.session
-<<<<<<< Updated upstream
+    const activeCookie = req.cookies.session;
     if (!activeCookie) {
-        res.redirect('/?message=The+session+has+ended')
-=======
-    if(!activeCookie){
-        //res.redirect('/?message=The+session+has+ended')
-        let data = await business.get_feeding_locations();
-        res.render('public-viewers', {
+        return res.redirect('/?message=The+session+has+ended');
+    }
+    const data = await business.get_feeding_locations();
+    if (!data) {
+        return res.render('public-viewers', {
             layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: data
-        })
->>>>>>> Stashed changes
-        return
+            locations: []
+        });
     }
-    //res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-    const fixed_locations = await business.get_feeding_locations()
+    const fixed_locations = await business.get_feeding_locations();
     res.render('admin', {
         layout: undefined,
         locations: fixed_locations
-    })
+    });
 });
+
 
 app.get('/resetpassword', async (req, res) => {
     res.render('resetpassword', { layout: undefined })
@@ -246,23 +237,25 @@ async function error404(req, res) {
     })
 }
 
-// Middleware for handling 404 errors (page not found) 
-app.use(error404)
-
-app.get('/logout', (req, res) => {
-    activeCookie = req.cookies.session
+// Middleware to disable layouts
+app.get('/logout', async (req, res) => {
+    let activeCookie = req.cookies.session;
     if (activeCookie) {
-        business.deleteSession(activeCookie)
+        await business.deleteSession(activeCookie);
     }
-    res.clearCookie('session')
-    res.redirect('/login')
+    res.clearCookie('session');
+    res.redirect('/login');
 });
 
-async function error404(req, res){
-    res.status(404).render('404')
+// 404 error handler
+async function error404(req, res) {
+    res.redirect('/404');
 }
-app.get('*', error404);
 
+// Handling all routes not matched above with the 404 error handler
+app.use(error404);
+
+// Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });

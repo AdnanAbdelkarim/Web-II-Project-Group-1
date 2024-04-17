@@ -114,9 +114,5 @@ module.exports = {
     generateCSRFToken, cancelCSRFToken,
     getUserbyEmail, updatePassword, 
     salted_hashed_password, passwordvalidity, 
-<<<<<<< Updated upstream
     visitDetails, reportDetails, createPost, getPosts
-=======
-    visitDetails, reportDetails, update_feeding_locations
->>>>>>> Stashed changes
 }

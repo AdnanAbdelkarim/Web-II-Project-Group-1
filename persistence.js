@@ -137,19 +137,10 @@ async function recordReport(info) {
 
 
 module.exports = {
-<<<<<<< Updated upstream
     getUserDetails, saveSession,
     getSessionData, deleteSession,
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
     updatePassword, recordVisit,
     recordReport, createPost, getPosts
-=======
-    getUserDetails, saveSession, 
-    getSessionData, deleteSession, 
-    addUser, get_feeding_locations, 
-    updateSession, getUserbyEmail, 
-    updatePassword, recordVisit, 
-    recordReport, update_feeding_locations
->>>>>>> Stashed changes
 }
