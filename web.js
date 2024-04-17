@@ -202,6 +202,7 @@ app.post('/resetpassword', async (req, res) => {
     }
     else if(userEmail) {
         res.cookie('tempCookie', email); // Set the cookie
+        console.log("An email has been sent to", email, "to reset your password")
         res.redirect('/passwordreset'); // Redirect to a route where you can check the cookie
     }
     else{
@@ -227,7 +228,10 @@ app.post('/passwordreset', async (req, res) => {
         console.log("The password has been changed")
         res.clearCookie('tempCookie')
 
-        res.redirect('/login')
+        res.render('login', 
+        {layout: undefined,
+        errorMessage: "The password has been reset successfully"
+        })
     }
 })
 
@@ -237,7 +241,6 @@ async function error404(req, res) {
     })
 }
 
-// Middleware to disable layouts
 app.get('/logout', async (req, res) => {
     let activeCookie = req.cookies.session;
     if (activeCookie) {
@@ -247,13 +250,13 @@ app.get('/logout', async (req, res) => {
     res.redirect('/login');
 });
 
-// 404 error handler
-async function error404(req, res) {
-    res.redirect('/404');
+async function error404(req, res){
+    res.status(404).render("404", {
+        layout: undefined
+    })
 }
 
-// Handling all routes not matched above with the 404 error handler
-app.use(error404);
+app.use(error404)
 
 // Start the server
 app.listen(port, () => {
