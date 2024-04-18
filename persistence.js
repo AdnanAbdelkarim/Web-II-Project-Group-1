@@ -5,8 +5,9 @@ let db = undefined
 let users = undefined
 let session = undefined
 let feeding_locations = undefined
+let visit_details = undefined
+let incident_reports = undefined
 let posts = undefined
-
 
 async function connectDatabase() {
     if (!client) {
@@ -17,6 +18,8 @@ async function connectDatabase() {
         posts = db.collection('posts');
         session = db.collection('sessions')
         feeding_locations = db.collection('feeding_sites');
+        visit_details = db.collection('visit_details');
+        incident_reports = db.collections('incident_reports');
     }
 }
 
@@ -160,6 +163,27 @@ async function recordReport(info) {
     return status;
 }
 
+async function recordVisit(info){
+    await connectDatabase()
+    let status = await visit_details.insertOne({
+        visitDate: info.visitDate,
+        foodWaterPlaced: info.foodWaterPlaced,
+        currentFoodLevel: info.currentFoodLevel,
+        numberOfCats: info.numberOfCats
+    });
+    return status;
+}
+
+async function recordReport(info){
+    await connectDatabase()
+    let status = await incident_reports.insertOne({
+        reportDate: info.reportDate,
+        issueType: info.issueType,
+        description: info.description,
+        location: info.location
+    });
+    return status;
+}
 
 module.exports = {
     getUserDetails, saveSession,

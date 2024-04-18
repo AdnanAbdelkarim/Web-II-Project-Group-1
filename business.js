@@ -102,7 +102,7 @@ async function visitDetails(info){
 async function reportDetails(info){
     return await persistence.recordReport(info)
 }
-//For Member
+
 async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
     await persistence.update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status)
 }

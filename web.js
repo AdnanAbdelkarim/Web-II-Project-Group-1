@@ -18,7 +18,7 @@ app.use(cookieParser())
 app.get('/', async (req, res) => {
     try {
         let data = await business.get_feeding_locations();
-        res.render('public-viewers', { layout: undefined, locations: data });
+        res.render('public-viewers', {layout: undefined, locations: data });
     } catch (error) {
         res.render('404', { layout: undefined })
     }
@@ -130,7 +130,7 @@ app.get('/standard', async (req, res) => {
             locations: []
         });
     }
-    res.render('fakeUsers', { layout: undefined });
+    res.render('fakeUsers', {route:'Standard'});
 });
 
 
@@ -145,7 +145,7 @@ app.get('/posts', async (req, res) => {
             locations: data
         });
     }
-    res.render('posts', { layout: undefined, posts: all_posts })
+    res.render('posts', { route:'Posts', posts: all_posts })
 });
 
 
@@ -201,6 +201,23 @@ app.post('/posts', async (req, res) => {
     let all_posts = await business.getPosts()
     res.render('posts', { layout: undefined, success: 'New Post Added Successfully', posts: all_posts })
 })
+
+app.get('/information', async (req, res) => {
+    activeCookie = req.cookies.session
+    
+    if (!activeCookie) {
+        res.redirect('/?message=The+session+has+ended')
+        return
+    }    
+    
+    try {
+        let data = await business.get_feeding_locations();
+        res.render('information', {locations: data, route: 'Information'});
+    } catch (error) {
+        res.render('404', { layout: undefined })
+    }
+});
+
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
