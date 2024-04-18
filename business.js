@@ -102,11 +102,17 @@ async function visitDetails(info){
 async function reportDetails(info){
     return await persistence.recordReport(info)
 }
-//For Member
+
 async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
     await persistence.update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status)
 }
 
 module.exports = {
-    validateCredentials, startSession, getSessionData, deleteSession, addUser, getUserDetails, get_feeding_locations, hashPassword,generateCSRFToken, cancelCSRFToken
+    validateCredentials, startSession,
+    getSessionData, deleteSession, addUser,
+    getUserDetails, get_feeding_locations,
+    generateCSRFToken, cancelCSRFToken,
+    getUserbyEmail, updatePassword, 
+    salted_hashed_password, passwordvalidity, 
+    visitDetails, reportDetails, createPost, getPosts
 }
