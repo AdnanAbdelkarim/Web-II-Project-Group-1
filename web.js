@@ -239,7 +239,7 @@ app.get('/admin', async (req, res) => {
         });
     }
     const fixed_locations = await business.get_feeding_locations();
-    res.render('admin1', {
+    res.render('admin', {
         layout: undefined,
         locations: fixed_locations
     });
@@ -293,6 +293,21 @@ app.post('/add_feeding_station', async (req, res) => {
 
 app.get('/adminGraph', (req, res) => {
     res.render('adminGraph', {layout: undefined})
+})
+
+app.get('/admin_urgent', async(req, res) => {
+    feedingLocations = await business.get_feeding_locations()
+    let filteredLocations = [];
+    for (i of feedingLocations){
+        if(i.food_level <= 50 && i.water_level <= 50 && (i.status).toLowerCase() === "active"&& (i.health_issues).toLowerCase() !== 'none'){
+            filteredLocations.push(i);
+        }
+    }
+    console.log(filteredLocations)
+    res.render('admin_urgent', {
+        layout: undefined,
+        locations: filteredLocations})
+
 })
 
 

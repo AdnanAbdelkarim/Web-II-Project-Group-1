@@ -76,6 +76,10 @@
             background-color: rgb(50, 31, 219);
             color: white;
         }
+        h1{
+            font-weight: bold;
+            font-style: italic;
+        }
     </style>
   <head>
     <base href="./">
@@ -176,6 +180,7 @@
         <main class="c-main">
             <title>Admin Dashboard</title>
             <div class="container-fluid">
+                <h1>Urgent Stations!</h1>
                 <table>
                     <thead>
                         <tr>
@@ -210,9 +215,6 @@
                         {{/each}}
                     </tbody>
                 </table>
-                <form action="/add_feeding_station" method="GET">
-                    <input class="add" type="submit" value="Add Feeding Station">
-                </form>
             </div>
         </main>
     </div>
