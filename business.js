@@ -99,6 +99,10 @@ async function visitDetails(info){
     return await persistence.recordVisit(info)
 }
 
+async function getRecordDetails(){
+    return await persistence.getRecordVisit();
+}
+
 async function reportDetails(info){
     return await persistence.recordReport(info)
 }
@@ -123,5 +127,5 @@ module.exports = {
     salted_hashed_password, passwordvalidity, 
     visitDetails, reportDetails, createBlog, getBlog,
     update_feeding_locations, delete_feeding_locations,
-    add_feeding_locations
+    add_feeding_locations, getRecordDetails
 }

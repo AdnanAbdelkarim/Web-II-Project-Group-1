@@ -217,38 +217,11 @@ app.get('/catcarerecord', async (req, res) => {
     
     try {
         let data = await business.get_feeding_locations();
-        res.render('catcarerecord', {locations: data, route: 'Cat Care Record'})
+        res.render('feeding_stationMain', {locations: data, route: 'Cat Care Record'})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
 });
-
-app.post('/catcarerecord', async (req, res) => {
-    litterBox = req.body.litterBox
-    foodBowl = req.body.foodBowl
-    waterBowl = req.body.waterBowl
-    sitename = req.body.location
-    urgent_items = {litterBox:litterBox, foodBowl:foodBowl, waterBowl:waterBowl}
-    info = {
-        sitename: sitename,
-        foodlevel: req.body.foodlevel,
-        water_level: req.body.waterLevel,
-        cat_number: req.body.numberOfCats,
-        health_issues: req.body.healthIssues,
-        urgent_items: urgent_items,
-        time: req.body.timeSubmitted
-    }
-
-    await business.visitDetails(info)
-        
-
-        res.redirect('/feeding_stations')
-})
-
-app.get('/records', async (req, res) => {
-    const data = await business.get_feeding_locations();
-    app.render('posts', {layout: 'main', locations:data})
-})
 
 app.use(express.static(path.join(__dirname, 'dist')));
 

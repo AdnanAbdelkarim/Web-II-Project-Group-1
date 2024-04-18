@@ -146,13 +146,20 @@ async function createBlog(textContent, filePath) {
 async function recordVisit(info) {
     await connectDatabase()
     let status = await visit_details.insertOne({
-        visitDate: info.visitDate,
-        foodWaterPlaced: info.foodWaterPlaced,
-        currentFoodLevel: info.currentFoodLevel,
-        numberOfCats: info.numberOfCats
+        info
     });
     return status;
 }
+
+async function getRecordVisit() {
+    await connectDatabase();
+    if (visit_details) {
+        let locations = await visit_details.find({}).toArray();
+        return locations;
+    }
+    return undefined;
+}
+
 
 async function recordReport(info) {
     await connectDatabase()
@@ -192,7 +199,7 @@ module.exports = {
     getSessionData, deleteSession,
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
-    updatePassword, recordVisit,
+    updatePassword, recordVisit, getRecordVisit,
     recordReport, createBlog, getBlog, delete_feeding_locations,
     add_feeding_locations, update_feeding_locations
 }

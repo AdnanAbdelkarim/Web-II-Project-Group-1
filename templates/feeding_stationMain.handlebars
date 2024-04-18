@@ -1,0 +1,63 @@
+<div class="container-lg">
+    <h1 class="text-center">Information</h1>
+    <hr>
+    <!-- Form to record details -->
+    <form action="/update_feeding_station" method="post">
+        <div class="mb-3">
+            <label for="foodLevel" class="form-label">Food Level (%)</label>
+            <input type="number" class="form-control" id="foodLevel" name="foodLevel" min="0" max="100" required>
+        </div>
+        <div class="mb-3">
+            <label for="waterLevel" class="form-label">Water Level (%)</label>
+            <input type="number" class="form-control" id="waterLevel" name="waterLevel" min="0" max="100" required>
+        </div>
+        <div class="mb-3">
+            <label for="numberOfCats" class="form-label">Number of Cats</label>
+            <input type="number" class="form-control" id="numberOfCats" name="numberOfCats" min="0" required>
+        </div>
+        <div class="mb-3">
+            <label for="healthIssues" class="form-label">Health Issues</label>
+            <select class="form-select" id="healthIssues" name="healthIssues" required>
+                <option value="none">None</option>
+                <option value="minor">Minor</option>
+                <option value="critical">Critical</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Critical Items</label>
+            <div class="mb-3">
+                <label for="litterBox" class="form-label">LitterBox</label>
+                <select class="form-select" id="litterBox" name="litterBox" required>
+                    <option value="not available">Not Available</option>
+                    <option value="damaged">Damaged</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="foodBowl" class="form-label">Food Bowl</label>
+                <select class="form-select" id="foodBowl" name="foodBowl" required>
+                    <option value="not available">Not Available</option>
+                    <option value="damaged">Damaged</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="waterBowl" class="form-label">Water Bowl</label>
+                <select class="form-select" id="waterBowl" name="waterBowl" required>
+                    <option value="not available">Not Available</option>
+                    <option value="damaged">Damaged</option>
+                    <option value="available">Available</option>
+                </select>
+            </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <select class="form-select" id="location" name="location" required>
+                <option value="" disabled selected>Select Location</option>
+                {{#each locations}}
+                <option value="{{this.name}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
