@@ -291,9 +291,25 @@ app.post('/add_feeding_station', async (req, res) => {
         res.redirect('/feeding_stations')
 })
 
-app.get('/adminGraph', (req, res) => {
-    res.render('adminGraph', {layout: undefined})
-})
+// Node.js route
+app.get('/adminGraph', async(req, res) => {
+    let food_water_amount = await business.get_feeding_locations(); // Array of objects
+    let food = food_water_amount.map((item) => parseFloat(item.food_level));
+    let water = food_water_amount.map((item) => parseFloat(item.water_level));
+
+    // Calculate averages
+    let foodAverage = food.reduce((acc, val) => acc + val, 0) / food.length;
+    let waterAverage = water.reduce((acc, val) => acc + val, 0) / water.length;
+
+    res.render('adminGraph', {
+        layout: undefined,
+        water: JSON.stringify(water), // Convert water array to JSON string
+        food: JSON.stringify(food),  // Convert food array to JSON string
+        foodAverage: foodAverage,
+        waterAverage: waterAverage
+    });
+});
+
 
 app.get('/admin_urgent', async(req, res) => {
     feedingLocations = await business.get_feeding_locations()

@@ -1,108 +1,10 @@
+<!DOCTYPE html>
 <html lang="en">
-    <style>
-        .container-fluid {
-            max-width: 1200px;
-            margin: auto;
-            padding: 2rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
-
-        td {
-            background-color: #fff;
-            color: #555;
-        }
-
-        nav {
-            background-color: #3c40ff;
-            overflow: hidden;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        nav li {
-            float: left;
-        }
-
-        nav a {
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: blue;
-        }
-        .red {
-            color:black;
-            }
-        
-        .status{
-            color: green;
-        }
-        .urgent{
-            color: red;
-            font-weight: bold;
-        }
-        .issues{
-            color: black;
-        }
-        .add{
-            background-color: green;
-            color: ;
-        }
-    </style>
-  <head>
-    <base href="./">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
-    <meta name="author" content="Łukasz Holeczek">
-    <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>CoreUI Free Bootstrap Admin Template</title>
-    <link rel="apple-touch-icon" sizes="57x57" href="assets/favicon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="assets/favicon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="assets/favicon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="assets/favicon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="assets/favicon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="assets/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="assets/favicon/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Vendors styles-->
     <link rel="stylesheet" href="vendors/simplebar/css/simplebar.css">
     <link rel="stylesheet" href="css/vendors/simplebar.css">
@@ -111,160 +13,131 @@
     <!-- We use those styles to show code examples, you should remove them in your application.-->
     <link href="css/examples.css" rel="stylesheet">
     <link href="vendors/@coreui/chartjs/css/coreui-chartjs.css" rel="stylesheet">
-  </head>
-  <body>
+</head>
+<body class="c-app">
     <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-      <div class="sidebar-brand d-none d-md-flex">
-        <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
-          <use xlink:href="assets/brand/coreui.svg#full"></use>
-        </svg>
-        <svg class="sidebar-brand-narrow" width="46" height="46" alt="CoreUI Logo">
-          <use xlink:href="assets/brand/coreui.svg#signet"></use>
-        </svg>
-      </div>
-      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
-          <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="notifications/alerts.html"><span class="nav-icon"></span> Feeding Stations</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/badge.html"><span class="nav-icon"></span> Badge</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/modals.html"><span class="nav-icon"></span> Modals</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/toasts.html"><span class="nav-icon"></span> Toasts</a></li>
-          </ul>
-        </li>
-        
-        <li class="nav-divider"></li>
-
-
-          </a></li>
-      </ul>
-      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+        <!-- Sidebar content -->
+        <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
+            <ul class="nav-group-items">
+                <li class="nav-item"><a class="nav-link" href="notifications/alerts.html"><span class="nav-icon"></span> Feeding Stations</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications/badge.html"><span class="nav-icon"></span> Badge</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications/modals.html"><span class="nav-icon"></span> Modals</a></li>
+                <li class="nav-item"><a class="nav-link" href="notifications/toasts.html"><span class="nav-icon"></span> Toasts</a></li>
+            </ul>
+        </ul>
     </div>
     <div class="wrapper d-flex flex-column min-vh-100 bg-light">
-      <header class="header header-sticky mb-4">
-        <div class="container-fluid">
-          <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
-            <svg class="icon icon-lg">
-              <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-menu"></use>
-            </svg>
-          </button><a class="header-brand d-md-none" href="#">
-            <svg width="118" height="46" alt="CoreUI Logo">
-              <use xlink:href="assets/brand/coreui.svg#full"></use>
-            </svg></a>
-          <ul class="header-nav d-none d-md-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
-          </ul>
-          <ul class="header-nav ms-auto">
-
-          </ul>
-          <ul class="header-nav ms-3">
-            <li class="nav-item dropdown"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/8.jpg" alt="user@email.com"></div>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end pt-0">
-                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
-                  <svg class="icon me-2">
-                    <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
-                  </svg> Logout</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </header>
-
-<body class="c-app">
-    <div class="c-body">
-        <main class="c-main">
-            <title>Admin Dashboard</title>
+        <header class="header header-sticky mb-4">
+            <!-- Header content -->
             <div class="container-fluid">
-            <div class="card mb-4">
-            <div class="card-body">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <h4 class="card-title mb-0">Traffic</h4>
-                  <div class="small text-medium-emphasis">January - July 2022</div>
-                </div>
-                <div class="btn-toolbar d-none d-md-block" role="toolbar" aria-label="Toolbar with buttons">
-                  <div class="btn-group btn-group-toggle mx-3" data-coreui-toggle="buttons">
-                    <input class="btn-check" id="option1" type="radio" name="options" autocomplete="off">
-                    <label class="btn btn-outline-secondary"> Day</label>
-                    <input class="btn-check" id="option2" type="radio" name="options" autocomplete="off" checked="">
-                    <label class="btn btn-outline-secondary active"> Month</label>
-                    <input class="btn-check" id="option3" type="radio" name="options" autocomplete="off">
-                    <label class="btn btn-outline-secondary"> Year</label>
-                  </div>
-                  <button class="btn btn-primary" type="button">
-                    <svg class="icon">
-                      <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-cloud-download"></use>
+                <button class="header-toggler px-md-0 me-md-3" type="button" onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+                    <svg class="icon icon-lg">
+                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-menu"></use>
                     </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="c-chart-wrapper" style="height:300px;margin-top:40px;">
-                <canvas class="chart" id="main-chart" height="300"></canvas>
-              </div>
+                </button>
+                <a class="header-brand d-md-none" href="#">
+                    <svg width="118" height="46" alt="CoreUI Logo">
+                        <use xlink:href="assets/brand/coreui.svg#full"></use>
+                    </svg>
+                </a>
+                <ul class="header-nav d-none d-md-flex">
+                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+                </ul>
+                <ul class="header-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">
+                        <svg class="icon icon-lg">
+                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
+                        </svg>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">
+                        <svg class="icon icon-lg">
+                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-list-rich"></use>
+                        </svg>
+                    </a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">
+                        <svg class="icon icon-lg">
+                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-envelope-open"></use>
+                        </svg>
+                    </a></li>
+                </ul>
+                <ul class="header-nav ms-3">
+                    <li class="nav-item dropdown"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <div class="avatar avatar-md"><img class="avatar-img" src="assets/img/avatars/8.jpg" alt="user@email.com"></div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end pt-0">
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <svg class="icon me-2">
+                                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
+                            </svg> Logout
+                        </a>
+                    </div>
+                    </li>
+                </ul>
             </div>
-            <div class="card-footer">
-              <div class="row row-cols-1 row-cols-md-5 text-center">
-                <div class="col mb-sm-2 mb-0">
-                  <div class="text-medium-emphasis">Visits</div>
-                  <div class="fw-semibold">29.703 Users (40%)</div>
-                  <div class="progress progress-thin mt-2">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+        </header>
+        <div class="c-body">
+            <main class="c-main">
+                <div class="container-fluid">
+                    <!-- Chart container -->
+                    <div style="width: 80%; margin: auto;">
+                        <canvas id="myChart"></canvas>
+                    </div>
                 </div>
-                <div class="col mb-sm-2 mb-0">
-                  <div class="text-medium-emphasis">Unique</div>
-                  <div class="fw-semibold">24.093 Users (20%)</div>
-                  <div class="progress progress-thin mt-2">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-                <div class="col mb-sm-2 mb-0">
-                  <div class="text-medium-emphasis">Pageviews</div>
-                  <div class="fw-semibold">78.706 Views (60%)</div>
-                  <div class="progress progress-thin mt-2">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-                <div class="col mb-sm-2 mb-0">
-                  <div class="text-medium-emphasis">New Users</div>
-                  <div class="fw-semibold">22.123 Users (80%)</div>
-                  <div class="progress progress-thin mt-2">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-                <div class="col mb-sm-2 mb-0">
-                  <div class="text-medium-emphasis">Bounce Rate</div>
-                  <div class="fw-semibold">40.15%</div>
-                  <div class="progress progress-thin mt-2">
-                    <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-        </main>
-    </div>
-</body>
-
-
-
-      <footer class="footer">
-        <div><a href="https://coreui.io">CoreUI </a><a href="https://coreui.io">Bootstrap Admin Template</a> © 2023 creativeLabs.</div>
-        <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
-      </footer>
+            </main>
+        </div>
+        <footer class="footer">
+            <div><a href="https://coreui.io">CoreUI </a><a href="https://coreui.io">Bootstrap Admin Template</a> © 2023 creativeLabs.</div>
+            <div class="ms-auto">Powered by&nbsp;<a href="https://coreui.io/docs/">CoreUI UI Components</a></div>
+        </footer>
     </div>
     <!-- CoreUI and necessary plugins-->
     <script src="vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
     <script src="vendors/simplebar/js/simplebar.min.js"></script>
-    <!-- Plugins and scripts required by this view-->
-    <script src="vendors/chart.js/js/chart.min.js"></script>
-    <script src="vendors/@coreui/chartjs/js/coreui-chartjs.js"></script>
-    <script src="vendors/@coreui/utils/js/coreui-utils.js"></script>
-    <script src="js/main.js"></script>
+    <!-- JavaScript code for creating the chart -->
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+data: {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [{
+        label: 'Water Level',
+        data: {{water}}, // Example data for water level
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+    }, {
+        label: 'Food Level',
+        data: {{food}}, // Example data for food level
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+    }, {
+        label: 'Food Average',
+        data: Array({{food.length}}).fill({{foodAverage}}),
+        borderColor: 'rgba(0, 0, 0, 1)',
+        borderWidth: 1,
+        borderDash: [10, 5] // Optional: Makes the line dashed
+    }, {
+        label: 'Water Average',
+        data: Array({{water.length}}).fill({{waterAverage}}),
+        borderColor: 'rgba(0, 0, 0, 1)',
+        borderWidth: 1,
+        borderDash: [10, 5] // Optional: Makes the line dashed
+    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
     </script>
-
-  </body>
+</body>
 </html>
