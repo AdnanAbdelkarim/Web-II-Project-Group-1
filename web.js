@@ -133,12 +133,6 @@ app.get('/standard', async (req, res) => {
     res.render('fakeUsers', {layout:'main', route:'Standard'});
 });
 
-
-
-app.get('/blog', async (req, res) => {
-    let all_blog = await business.getBlog()
-})
-
 app.get('/blog', async (req, res) => {
     let all_blog = await business.getBlog()
 
