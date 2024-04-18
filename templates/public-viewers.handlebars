@@ -51,6 +51,11 @@
             font-weight: bold;
             text-transform: uppercase;
         }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -87,9 +92,17 @@
             <p>If you're interested in helping, please consider volunteering or donating to support our cause.</p>
             <p>Thank you for your compassion towards stray animals!</p>
             <p>- The Local Animal Shelter</p>
+            <!-- Error message section -->
+            {{#if errorMessage}}
+            <div class="error-message">
+                {{errorMessage}}
+            </div>
+            {{/if}}
+            <!-- Join section with login and sign up buttons -->
             <div class="join-section">
                 <a href="/register">Sign Up</a> | <a href="/login">Log In</a>
             </div>
+            <!-- Table section -->
             <div>
                 <table>
                     <tr>
