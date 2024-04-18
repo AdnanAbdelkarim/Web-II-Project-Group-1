@@ -94,17 +94,19 @@ async function get_feeding_locations() {
     return undefined;
 }
 //For Member
-async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
+async function update_feeding_locations(number, food_level, water_level, cat_number, urgent_items, health_issues, status){
     await connectDatabase()
     let feeding_locations = db.collection('feeding_sites');
-    await feeding_locations.updateOne({"number": number},
+    await feeding_locations.updateOne({number: number},
     {$set:{
         "food_level": food_level,
         "water_level": water_level,
         "cat_number": cat_number,
+        "urgent_items": urgent_items,
         "health_issues": health_issues,
         "status": status
     }})
+    return true
 }
 
 async function delete_feeding_locations(number){

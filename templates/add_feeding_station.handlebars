@@ -72,10 +72,8 @@
         .issues{
             color: black;
         }
-        .add{
-            background-color: green;
-            color: ;
-        }
+
+
     </style>
   <head>
     <base href="./">
@@ -124,10 +122,9 @@
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
           <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="notifications/alerts.html"><span class="nav-icon"></span> Feeding Stations</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/badge.html"><span class="nav-icon"></span> Badge</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/modals.html"><span class="nav-icon"></span> Modals</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/toasts.html"><span class="nav-icon"></span> Toasts</a></li>
+            <li class="nav-item"><a class="nav-link" href="/feeding_stations"><span class="nav-icon"></span> Feeding Stations</a></li>
+            <li class="nav-item"><a class="nav-link" href="/adminGraph"><span class="nav-icon"></span>Admin Graph</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin_urgent"><span class="nav-icon"></span> Urgent Stations</a></li>
           </ul>
         </li>
         
@@ -150,8 +147,7 @@
               <use xlink:href="assets/brand/coreui.svg#full"></use>
             </svg></a>
           <ul class="header-nav d-none d-md-flex">
-            <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="/feeding_stations">Dashboard</a></li>
           </ul>
           <ul class="header-nav ms-auto">
 
@@ -193,18 +189,20 @@
                     <tbody>
                         <form action="/add_feeding_station" method="POST">
                             <tr>
-                                <td><input class="form-control" type="text" placeholder="sitenumber" id="sitenumber" name="sitenumber" required></td>
+                                <td><input class="form-control" type="number" placeholder="sitenumber" id="sitenumber" name="sitenumber" required></td>
                                 <td><input class="form-control" type="text" placeholder="sitename" id="sitename" name="sitename" required></td>
                                 <td><input class="form-control" type="text" placeholder="sitelocation" id="sitelocation" name="sitelocation" required></td>
-                                <td><input class="form-control" type="text" placeholder="foodlevel" id="foodlevel" name="foodlevel" required></td>
-                                <td><input class="form-control" type="text" placeholder="water_level" id="water_level" name="water_level" required></td>
+                                <td><input class="form-control" type="number" placeholder="foodlevel" id="foodlevel" name="foodlevel" required></td>
+                                <td><input class="form-control" type="number" placeholder="water_level" id="water_level" name="water_level" required></td>
                                 <td><input class="form-control" type="text" placeholder="urgent_items" id="urgent_items" name="urgent_items" required></td>
-                                <td><input class="form-control" type="text" placeholder="cat_number" id="cat_number" name="cat_number" required></td>
+                                <td><input class="form-control" type="number" placeholder="cat_number" id="cat_number" name="cat_number" required></td>
                                 <td><input class="form-control" type="text" placeholder="health_issues" id="health_issues" name="health_issues" required></td>
                                 <td><input class="form-control" type="text" placeholder="status" id="status" name="status" required></td>
+                                <input name="csrfToken" type="hidden" value="{{csrfToken}}">
+
                             </tr>
                             <tr>
-                                <td colspan="9"><button type="submit">Submit</button></td>
+                                <td colspan="9" class="add"><button type="submit">Add Station</button></td>
                             </tr>
                         </form>
                     </tbody>

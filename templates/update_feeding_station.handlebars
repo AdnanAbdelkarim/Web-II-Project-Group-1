@@ -124,10 +124,9 @@
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
           <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="notifications/alerts.html"><span class="nav-icon"></span> Feeding Stations</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/badge.html"><span class="nav-icon"></span> Badge</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/modals.html"><span class="nav-icon"></span> Modals</a></li>
-            <li class="nav-item"><a class="nav-link" href="notifications/toasts.html"><span class="nav-icon"></span> Toasts</a></li>
+            <li class="nav-item"><a class="nav-link" href="/feeding_stations"><span class="nav-icon"></span> Feeding Stations</a></li>
+            <li class="nav-item"><a class="nav-link" href="/adminGraph"><span class="nav-icon"></span>Admin Graph</a></li>
+            <li class="nav-item"><a class="nav-link" href="/admin_urgent"><span class="nav-icon"></span> Urgent Stations</a></li>
           </ul>
         </li>
         
@@ -154,18 +153,7 @@
             <li class="nav-item"><a class="nav-link" href="#">Users</a></li>
           </ul>
           <ul class="header-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="#">
-                <svg class="icon icon-lg">
-                  <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-bell"></use>
-                </svg></a></li>
-            <li class="nav-item"><a class="nav-link" href="#">
-                <svg class="icon icon-lg">
-                  <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-list-rich"></use>
-                </svg></a></li>
-            <li class="nav-item"><a class="nav-link" href="#">
-                <svg class="icon icon-lg">
-                  <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-envelope-open"></use>
-                </svg></a></li>
+
           </ul>
           <ul class="header-nav ms-3">
             <li class="nav-item dropdown"><a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -181,7 +169,6 @@
           </ul>
         </div>
       </header>
-
 <body class="c-app">
     <div class="c-body">
         <main class="c-main">
@@ -191,8 +178,6 @@
                     <thead>
                         <tr>
                             <th>Feeding Station Number</th>
-                            <th>Feeding Station Name</th>
-                            <th>Location</th>
                             <th>Food Level</th>
                             <th>Water Level</th>
                             <th>Urgent Items</th>
@@ -202,25 +187,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <form action="/add_feeding_station" method="POST">
+                        <form action="/update_feeding_station" method="POST">
                             <tr>
-                                <td><input class="form-control" type="text" placeholder="sitenumber" id="sitenumber" name="sitenumber" required></td>
-                                <td><input class="form-control" type="text" placeholder="sitename" id="sitename" name="sitename" required></td>
-                                <td><input class="form-control" type="text" placeholder="sitelocation" id="sitelocation" name="sitelocation" required></td>
-                                <td><input class="form-control" type="text" placeholder="foodlevel" id="foodlevel" name="foodlevel" required></td>
-                                <td><input class="form-control" type="text" placeholder="water_level" id="water_level" name="water_level" required></td>
+                                <td>{{num}}</td>
+                                <td><input class="form-control" type="number" placeholder="foodlevel" id="foodlevel" name="foodlevel" required></td>
+                                <td><input class="form-control" type="number" placeholder="water_level" id="water_level" name="water_level" required></td>
                                 <td><input class="form-control" type="text" placeholder="urgent_items" id="urgent_items" name="urgent_items" required></td>
-                                <td><input class="form-control" type="text" placeholder="cat_number" id="cat_number" name="cat_number" required></td>
+                                <td><input class="form-control" type="number" placeholder="cat_number" id="cat_number" name="cat_number" required></td>
                                 <td><input class="form-control" type="text" placeholder="health_issues" id="health_issues" name="health_issues" required></td>
                                 <td><input class="form-control" type="text" placeholder="status" id="status" name="status" required></td>
+                                <td><input type="hidden" value={{num}} id="siteNum" name="siteNum"></td>
                             </tr>
                             <tr>
                                 <td colspan="9"><button type="submit">Submit</button></td>
                             </tr>
                         </form>
                     </tbody>
-                </table>
-                     
+                </table>  
             </div>
         </main>
     </div>

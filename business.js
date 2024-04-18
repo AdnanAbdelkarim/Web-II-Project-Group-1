@@ -103,8 +103,8 @@ async function reportDetails(info){
     return await persistence.recordReport(info)
 }
 
-async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
-    await persistence.update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status)
+async function update_feeding_locations(number, food_level, water_level, cat_number, urgent_items, health_issues, status){
+    await persistence.update_feeding_locations(number, food_level, water_level, cat_number, urgent_items, health_issues, status)
 }
 async function delete_feeding_locations(number){
     return await persistence.delete_feeding_locations(number)

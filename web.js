@@ -92,7 +92,12 @@ app.post('/login', async (req, res) => {
         let session_id = await business.startSession({ userName: username, accountType: valid })
         let sessionData = await business.getSessionData(session_id)
         if (valid === 'admin') {
+<<<<<<< Updated upstream
             res.cookie('session', session_id, { expires: sessionData.Expiry , httpOnly: true, secure: true})
+=======
+            //let token = await business.generateCSRFToken(session_id)
+            res.cookie('session', session_id, { expires: sessionData.Expiry })
+>>>>>>> Stashed changes
             res.redirect('/admin')
         }
         else if (valid === 'standard') {
@@ -280,27 +285,38 @@ app.get('/admin', async (req, res) => {
         });
     }
     const fixed_locations = await business.get_feeding_locations();
+<<<<<<< Updated upstream
     res.render('admin1', {
         layout: 'main',
+=======
+    res.render('feeding_stations', {
+        layout: "adminMain",
+>>>>>>> Stashed changes
         locations: fixed_locations
     });
 });
 
+<<<<<<< Updated upstream
 app.get('/feeding_stations', async(req, res) => {
     const fixed_locations = await business.get_feeding_locations();
     res.render('feeding_stations', {
         layout: 'main',
         locations: fixed_locations,
         route: 'Feeding Stations'
+=======
+
+app.get('/feeding_stations', async(req, res) => {
+    const fixed_locations = await business.get_feeding_locations();
+    res.render('feeding_stations', {
+        layout: 'adminMain',
+        locations: fixed_locations
+>>>>>>> Stashed changes
     });
 });
 
 app.post('/delete_feeding_location', async (req, res) => {
-    let siteNumber = req.body.siteNum;
-    console.log(siteNumber)
-    
+    let siteNumber = req.body.siteNum;  
     await business.delete_feeding_locations(siteNumber)
-
     res.redirect('/feeding_stations')
 });
 
@@ -317,8 +333,11 @@ app.get('/add_feeding_station', async (req, res) => {
         });
     }
     res.render('add_feeding_station', {layout: undefined})
+<<<<<<< Updated upstream
 >>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 
+=======
+>>>>>>> Stashed changes
 })
 
 app.post('/add_feeding_station', async (req, res) => {
@@ -331,13 +350,27 @@ app.post('/add_feeding_station', async (req, res) => {
     cat_number = req.body.cat_number
     health_issues = req.body.health_issues
     sitestatus = req.body.status
-
     await business.add_feeding_locations(
         num, sitename, sitelocation, foodlevel, water_level, urgent_items, cat_number,
         health_issues, sitestatus)
-        
+        res.redirect('/admin')
+})
 
-        res.redirect('/feeding_stations')
+app.get('/update_feeding_station', (req, res) => {
+    const num = req.query.siteNum
+    res.render('update_feeding_station', {layout: undefined, num:num})
+})
+
+app.post('/update_feeding_station', async(req, res) => {
+    const num = req.body.siteNum
+    const foodlevel = req.body.foodlevel
+    const water_level = req.body.water_level
+    const urgent_items = req.body.urgent_items
+    const cat_number = req.body.cat_number
+    const health_issues = req.body.health_issues
+    const sitestatus = req.body.status
+    await business.update_feeding_locations(num, foodlevel, water_level, cat_number, urgent_items, health_issues, sitestatus)
+    res.redirect('/feeding_stations')
 })
 
 <<<<<<< HEAD
@@ -388,7 +421,6 @@ app.get('/admin_urgent', async(req, res) => {
             filteredLocations.push(i);
         }
     }
-    console.log(filteredLocations)
     res.render('admin_urgent', {
         layout: undefined,
         locations: filteredLocations})
