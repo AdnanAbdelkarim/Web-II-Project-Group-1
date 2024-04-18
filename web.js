@@ -20,12 +20,12 @@ app.get('/', async (req, res) => {
         let data = await business.get_feeding_locations();
         res.render('public-viewers', {layout: undefined, locations: data });
     } catch (error) {
-        res.render('404', { layout: undefined })
+        res.render('404', {layout: undefined})
     }
 });
 
 app.get('/register', (req, res) => {
-    res.render('register', { layout: undefined })
+    res.render('register', {layout: undefined})
 })
 
 app.post('/register', async (req, res) => {
@@ -38,7 +38,7 @@ app.post('/register', async (req, res) => {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/g.test(password);
     if (password === repeatPassword && !user && password.length >= 8 && hasSpecialChar) {
         await business.addUser(username, email, password);
-        res.render('login', { layout: undefined, errorMessage: "Account has been created" });
+        res.render('login', {layout: undefined, errorMessage: "Account has been created" });
     } else if (user) {
         res.render("register", {
             layout: undefined,
@@ -117,7 +117,7 @@ app.get('/standard', async (req, res) => {
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: undefined,
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
@@ -125,33 +125,33 @@ app.get('/standard', async (req, res) => {
     const data = await business.get_feeding_locations();
     if (!data) {
         return res.render('public-viewers', {
-            layout: undefined,
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: []
         });
     }
-    res.render('fakeUsers', {route:'Standard'});
+    res.render('fakeUsers', {layout:'main', route:'Standard'});
 });
 
 
-app.get('/posts', async (req, res) => {
-    let all_posts = await business.getPosts()
+app.get('/blog', async (req, res) => {
+    let all_blog = await business.getBlog()
 
     activeCookie = req.cookies.session
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: undefined,
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
     }
-    res.render('posts', { route:'Posts', posts: all_posts })
+    res.render('blog', { layout:'main', route:'Blog', blog: all_blog })
 });
 
 
 app.use(fileUpload())
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.post('/posts', async (req, res) => {
+app.post('/blog', async (req, res) => {
     // get the data
     let textContent = req.body.textContent
     let postPic = req.files && req.files.post_pic
@@ -173,15 +173,15 @@ app.post('/posts', async (req, res) => {
             errors.push('Only JPEG, PNG, and JPG files are allowed')
         }
 
-        const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+        const maxSize = 1 * 1024 * 1024; 
         if (postPic.size > maxSize) {
             return res.status(400).send('File size exceeds the limit (1MB)');
         }
     } else {
         errors.push('Image is required')
         if (errors.length !== 0) {
-            let all_posts = await business.getPosts()
-            res.render('posts', { layout: undefined, errors, posts: all_posts })
+            let all_blog = await business.getBlog()
+            res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
             return
         }
     }
@@ -189,8 +189,8 @@ app.post('/posts', async (req, res) => {
 
 
     if (errors.length !== 0) {
-        let all_posts = await business.getPosts()
-        res.render('posts', { layout: undefined, errors, posts: all_posts })
+        let all_blog = await business.getBlog()
+        res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
         return
     }
 
@@ -198,11 +198,11 @@ app.post('/posts', async (req, res) => {
     await postPic.mv(`${__dirname}${filePath}`)
     // Save to db
     await business.createPost(textContent, filePath)
-    let all_posts = await business.getPosts()
-    res.render('posts', { layout: undefined, success: 'New Post Added Successfully', posts: all_posts })
+    let all_blog = await business.getBlog()
+    res.render('blog', { layout: 'main', route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
 })
 
-app.get('/information', async (req, res) => {
+app.get('/catcarerecord', async (req, res) => {
     activeCookie = req.cookies.session
     
     if (!activeCookie) {
@@ -212,12 +212,33 @@ app.get('/information', async (req, res) => {
     
     try {
         let data = await business.get_feeding_locations();
-        res.render('information', {locations: data, route: 'Information'});
+        res.render('catcarerecord', {locations: data, route: 'Cat Care Record', formatDateNowISO: formatDateNowISO})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
 });
 
+app.post('/catcarerecord', async (req, res) => {
+    litterBox = req.body.litterBox
+    foodBowl = req.body.foodBowl
+    waterBowl = req.body.waterBowl
+    sitename = req.body.location
+    urgent_items = {litterBox:litterBox, foodBowl:foodBowl, waterBowl:waterBowl}
+    info = {
+        sitename: sitename,
+        foodlevel: req.body.foodlevel,
+        water_level: req.body.waterLevel,
+        cat_number: req.body.numberOfCats,
+        health_issues: req.body.healthIssues,
+        urgent_items: urgent_items,
+        time: req.body.timeSubmitted
+    }
+
+    await business.visitDetails(info)
+        
+
+        res.redirect('/feeding_stations')
+})
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
@@ -226,36 +247,32 @@ app.get('/admin', async (req, res) => {
     const data = await business.get_feeding_locations();
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: undefined,
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
     }
     if (!data) {
         return res.render('public-viewers', {
-            layout: undefined,
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
     }
     const fixed_locations = await business.get_feeding_locations();
-    res.render('admin', {
-        layout: undefined,
+    res.render('admin1', {
+        layout: 'main',
         locations: fixed_locations
     });
 });
 
-
-
-
 app.get('/feeding_stations', async(req, res) => {
     const fixed_locations = await business.get_feeding_locations();
     res.render('feeding_stations', {
-        layout: undefined,
-        locations: fixed_locations
+        layout: 'main',
+        locations: fixed_locations,
+        route: 'Feeding Stations'
     });
-
-  
 });
 
 app.post('/delete_feeding_location', async (req, res) => {
@@ -268,7 +285,7 @@ app.post('/delete_feeding_location', async (req, res) => {
 });
 
 app.get('/add_feeding_station', async (req, res) => {
-    res.render('add_feeding_station', {layout: undefined})
+    res.render('add_feeding_station', {layout: 'main'})
 
 })
 
@@ -291,45 +308,12 @@ app.post('/add_feeding_station', async (req, res) => {
         res.redirect('/feeding_stations')
 })
 
-// Node.js route
-app.get('/adminGraph', async(req, res) => {
-    let food_water_amount = await business.get_feeding_locations(); // Array of objects
-    let food = food_water_amount.map((item) => parseFloat(item.food_level));
-    let water = food_water_amount.map((item) => parseFloat(item.water_level));
-
-    // Calculate averages
-    let foodAverage = food.reduce((acc, val) => acc + val, 0) / food.length;
-    let waterAverage = water.reduce((acc, val) => acc + val, 0) / water.length;
-
-    res.render('adminGraph', {
-        layout: undefined,
-        water: JSON.stringify(water), // Convert water array to JSON string
-        food: JSON.stringify(food),  // Convert food array to JSON string
-        foodAverage: foodAverage,
-        waterAverage: waterAverage
-    });
-});
-
-
-app.get('/admin_urgent', async(req, res) => {
-    feedingLocations = await business.get_feeding_locations()
-    let filteredLocations = [];
-    for (i of feedingLocations){
-        if(i.food_level <= 50 && i.water_level <= 50 && (i.status).toLowerCase() === "active"&& (i.health_issues).toLowerCase() !== 'none'){
-            filteredLocations.push(i);
-        }
-    }
-    console.log(filteredLocations)
-    res.render('admin_urgent', {
-        layout: undefined,
-        locations: filteredLocations})
-
+app.get('/adminGraph', (req, res) => {
+    res.render('adminGraph', {layout: 'main'})
 })
 
-
-
 app.get('/resetpassword', async (req, res) => {
-    res.render('resetpassword', { layout: undefined })
+    res.render('resetpassword', { layout: 'main' })
 })
 
 app.post('/resetpassword', async (req, res) => {
@@ -337,7 +321,7 @@ app.post('/resetpassword', async (req, res) => {
     const userEmail = await business.getUserbyEmail(email);
 
     if (!userEmail) {
-        return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
+        return res.render("resetpassword", { layout: 'main', errorMessage: "Email not Registered!" });
     }
     else if (userEmail) {
         res.cookie('tempCookie', email); // Set the cookie
@@ -350,7 +334,7 @@ app.post('/resetpassword', async (req, res) => {
 });
 
 app.get('/passwordreset', (req, res) => {
-    res.render('passwordreset', { layout: undefined })
+    res.render('passwordreset', { layout: 'main' })
 })
 
 app.post('/passwordreset', async (req, res) => {
@@ -360,7 +344,7 @@ app.post('/passwordreset', async (req, res) => {
     passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
     if (!passwordvalidation) {
         res.render("passwordreset",
-            { layout: undefined, errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
+            { layout: 'main', errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
     }
     else {
         await business.updatePassword(email, newPass)
@@ -369,7 +353,7 @@ app.post('/passwordreset', async (req, res) => {
 
         res.render('login',
             {
-                layout: undefined,
+                layout: 'main',
                 errorMessage: "The password has been reset successfully"
             })
     }
@@ -377,7 +361,7 @@ app.post('/passwordreset', async (req, res) => {
 
 async function error404(req, res) {
     res.status(404).render("404", {
-        layout: undefined
+        layout: 'main'
     })
 }
 
@@ -392,7 +376,7 @@ app.get('/logout', async (req, res) => {
 
 async function error404(req, res) {
     res.status(404).render("404", {
-        layout: undefined
+        layout: 'main'
     })
 }
 
