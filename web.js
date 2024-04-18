@@ -128,7 +128,7 @@ app.get('/standard', async (req, res) => {
             locations: []
         });
     }
-    res.render('fakeUsers');
+    res.render('fakeUsers', {route:'Standard'});
 });
 
 
@@ -140,7 +140,7 @@ app.get('/posts', async (req, res) => {
         res.redirect('/?message=The+session+has+ended')
         return
     }
-    res.render('posts', { layout: undefined, posts: all_posts })
+    res.render('posts', { route:'Posts', posts: all_posts })
 });
 
 
@@ -207,7 +207,7 @@ app.get('/information', async (req, res) => {
     
     try {
         let data = await business.get_feeding_locations();
-        res.render('information', {locations: data });
+        res.render('information', {locations: data, route: 'Information'});
     } catch (error) {
         res.render('404', { layout: undefined })
     }
