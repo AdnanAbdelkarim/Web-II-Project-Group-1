@@ -1,70 +1,128 @@
-
-<h1 class="text-center">Posts</h1>
-<hr>
-<h2 class="mt-5">
-    Create Post
-</h2>
-<div class="card p-5 mb-5">
-
-    {{#if errors}}
-    <div class="alert alert-danger" role="alert">
-        <ul class="people_list">
-            {{#each errors}}
-            <li>{{this}}</li>
-            {{/each}}
-        </ul>
-    </div>
-    {{/if}}
-
-    {{#if success}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Success !</strong>{{success}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {{/if}}
-
-    <form action="/posts" method="post" enctype="multipart/form-data">
-        <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
-                style="height: 100px" name="textContent"></textarea>
-            <label for="floatingTextarea2">Add your text here</label>
-        </div>
-
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Upload Picture</label>
-            <input  class="form-control" name="post_pic" type="file" id="formFile" accept="image/*" />
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-
-    </form>
-</div>
-
-
-<hr>
-<h2>All Posts</h2>
-{{#if posts}}
-<div class="row">
-    {{#each posts}}
-
-    <div class="col-4 mb-5">
-        <div class="card" style="width: 18rem;">
-            {{#if this.filePath}}
-            <img src="{{this.filePath}}" class="card-img-top" alt="...">
-            {{else}}
-            <img src="https://i0.wp.com/sunrisedaycamp.org/wp-content/uploads/2020/10/placeholder.png?ssl=1"
-                class="card-img-top" alt="...">
-            {{/if}}
-
-            <div class="card-body">
-                {{#if this.textContent}}
-                <p class="card-text">{{this.textContent}}</p>
-                {{/if}}
+        <!-- Modal -->
+        <div class="modal fade" id="updateSiteModal" tabindex="-1" aria-labelledby="updateSiteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateSiteModalLabel">Update Feeding Site Details</h5>
+                        <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form -->
+                        <form action="/posts" method="POST">
+                            <div class="mb-3">
+                                <label for="location_name" class="form-label">Location:</label>
+                                <select class="form-select" id="location_name" name="location_name" required>
+                                    <option value="" disabled selected>Select Location</option>
+                                    {{#each locations}}
+                                    <option value="{{this.name}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="food_level" class="form-label">Food Level (%):</label>
+                                <input type="text" class="form-control" id="food_level" name="food_level" required pattern="\d+%">
+                            </div>
+                            <div class="mb-3">
+                                <label for="water_level" class="form-label">Water Level (%):</label>
+                                <input type="text" class="form-control" id="water_level" name="water_level" required pattern="\d+%">
+                            </div>
+                            <div class="mb-3">
+                                <label for="health_issue" class="form-label">Health Issue:</label>
+                                <select class="form-select" id="health_issue" name="health_issue" required>
+                                    <option value="none">None</option>
+                                    <option value="minor">Minor</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="number_of_cats" class="form-label">Number of Cats:</label>
+                                <input type="number" class="form-control" id="number_of_cats" name="number_of_cats" required min="0">
+                            </div>
+                            <fieldset class="mb-3">
+                                <legend>Critical Item Availability:</legend>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="letterbox" id="letterbox" value="true">
+                                    <label class="form-check-label" for="letterbox">Letterbox</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="food_bowl" id="food_bowl" value="true">
+                                    <label class="form-check-label" for="food_bowl">Food Bowl</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="water_bowl" id="water_bowl" value="true">
+                                    <label class="form-check-label" for="water_bowl">Water Bowl</label>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-success">Update Details</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    {{/each}}
-</div>
-{{/if}}
+<div class="container">
+    <!-- Posts section -->
+    <div class="row">
+        {{#each locations}}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    Feeding Station #{{this.user}}
+                </div>
+                <div class="card-body">
+                    
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text">{{this.info}}</p>
+                    <div class="mb-2">
+                        <label class="form-label">Food Level:</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{this.food_level}};" aria-valuenow="{{this.food_level}}" aria-valuemin="0" aria-valuemax="100">{{this.food_level}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Water Level:</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{this.water_level}};" aria-valuenow="{{this.water_level}}" aria-valuemin="0" aria-valuemax="100">{{this.water_level}}</div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <strong>Number of Cats:</strong> {{this.cat_number}}
+                    </div>
+                    <div class="mb-2">
+                        <strong>Health Issues:</strong> {{this.health_issue}}
+                    </div>
+                    <div class="mb-2">
+                        <strong>Critical Items:</strong>
+                        <ul>
+                            <li>
+                                <span class="fw-semibold">LitterBox:</span>
+                                {{#if this.critical_item.letterbox}}
+                                <span>Available</span>
+                                {{else}}
+                                <span>Missing</span>
+                                {{/if}}
+                            </li>
+                            <li>
+                                <span class="fw-semibold">Food Bowl:</span>
+                                {{#if this.critical_item.food_bowl}}
+                                <span>Available</span>
+                                {{else}}
+                                <span>Missing</span>
+                                {{/if}}
+                            </li>
+                            <li>
+                                <span class="fw-semibold">Water Bowl:</span>
+                                {{#if this.critical_item.water_bowl}}
+                                <span>Available</span>
+                                {{else}}
+                                <span>Missing</span>
+                                {{/if}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
 </div>

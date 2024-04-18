@@ -201,7 +201,7 @@ app.post('/blog', async (req, res) => {
     let filePath = `/assets/${Date.now()}_${postPic.name}`
     await postPic.mv(`${__dirname}${filePath}`)
     // Save to db
-    await business.createPost(textContent, filePath)
+    await business.createBlog(textContent, filePath)
 
     let all_blog = await business.getBlog()
     res.render('blog', { layout: 'main', route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
@@ -243,6 +243,11 @@ app.post('/catcarerecord', async (req, res) => {
         
 
         res.redirect('/feeding_stations')
+})
+
+app.get('/records', async (req, res) => {
+    const data = await business.get_feeding_locations();
+    app.render('posts', {layout: 'main', locations:data})
 })
 
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -376,8 +381,10 @@ app.get('/admin_urgent', async(req, res) => {
         }
     }
     res.render('admin_urgent', {
-        layout: undefined,
-        locations: filteredLocations})
+        layout: 'adminMain',
+        locations: filteredLocations, 
+        route: 'Urgent'
+    })
 })
 
 app.get('/resetpassword', async (req, res) => {

@@ -15,7 +15,7 @@ async function connectDatabase() {
         await client.connect();
         db = client.db('project_related_database');
         users = db.collection('UserAccounts');
-        blog = db.collection('blog');
+        blog = db.collection('posts');
         session = db.collection('sessions')
         feeding_locations = db.collection('feeding_sites');
         visit_details = db.collection('visit_details');

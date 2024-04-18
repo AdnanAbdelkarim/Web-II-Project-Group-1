@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <style>
 table.feedingStation {
     width: 100%;
@@ -73,111 +72,6 @@ table.feedingStation td {
   </tbody>
 </table>
             
-=======
-{{!-- <html lang="en">--}}
-    <style>
-
-
-        table.feedingtable {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table.feedingtable th, table.feedingtable td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-        }
-
-        table.feedingtable th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
-
-        table.feedingtable td {
-            background-color: #fff;
-            color: #555;
-        }
-
-        .red {
-            color:black;
-            }
-        
-        .status{
-            color: green;
-        }
-        .urgent{
-            color: red;
-            font-weight: bold;
-        }
-        .issues{
-            color: black;
-        }
-        .add{
-            background-color: rgb(50, 31, 219);
-            color: white;
-        }
-        .update{
-          color:#3c40ff;
-          font-weight: bold;
-        }
-        .delete{
-          color: red;
-          font-weight: bold;
-        }
-    </style>
-
-                <table class="feedingtable">
-                    <thead>
-                        <tr>
-                            <th>Feeding Station Number</th>
-                            <th>Feeding Station</th>
-                            <th>Location</th>
-                            <th>Food Level</th>
-                            <th>Water Level</th>
-                            <th>Urgent Items</th>
-                            <th>Num of Cats</th>
-                            <th>Health Issues</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each locations}}
-                        <tr>
-                            <td name="siteNum">{{this.number}}</td>
-                            <td name="sitename">{{this.name}}</td>
-                            <td><a href="{{this.location}}">{{this.location}}</a></td>
-                            <td class="red" >{{this.food_level}}%</td>
-                            <td class="red" >{{this.water_level}}%</td>
-                            <td class="urgent" >{{this.urgent_items}}</td>
-                            <td>{{this.cat_number}}</td>
-                            <td class="issues">{{this.health_issues}}</td>
-                            <td class="status">{{this.status}}</td>
-
-                            <td><form action="/delete_feeding_location" method="POST">
-                                <input type="hidden" name="siteNum" value="{{this.number}}">
-                                <button class="delete" type="submit">Delete</button>
-                            </form></td>
-                            <td><form action="/update_feeding_station" method="GET">
-                                <input type="hidden" name="siteNum" value="{{this.number}}">
-                                <input type="hidden" name="sitename" value="{{ this.name }}">
-                                <button class="update" type="submit">Update</button>
-                            </form></td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-                <form action="/add_feeding_station" method="GET">
-                    <input class="add" type="submit" value="Add Feeding Station">
-                </form>
-            </div>
-        </main>
-    </div>
-</body>
->>>>>>> Stashed changes
 <script>
     const statusElements = document.querySelectorAll('.status');
     const statusElements1 = document.querySelectorAll('.red');
@@ -203,9 +97,5 @@ table.feedingStation td {
             element.style.color = 'red';
             }
             });
-<<<<<<< Updated upstream
 </script>
 
-=======
-</script>
->>>>>>> Stashed changes
