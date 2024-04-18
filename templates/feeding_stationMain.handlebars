@@ -2,18 +2,18 @@
     <h1 class="text-center">Information</h1>
     <hr>
     <!-- Form to record details -->
-    <form action="/update_feeding_station" method="post">
+    <form action="/add_feeding_station" method="post">
         <div class="mb-3">
-            <label for="foodLevel" class="form-label">Food Level (%)</label>
-            <input type="number" class="form-control" id="foodLevel" name="foodLevel" min="0" max="100" required>
+            <label for="food_level" class="form-label">Food Level (%)</label>
+            <input type="number" class="form-control" id="food_level" name="food_level" min="0" max="100" required>
         </div>
         <div class="mb-3">
-            <label for="waterLevel" class="form-label">Water Level (%)</label>
-            <input type="number" class="form-control" id="waterLevel" name="waterLevel" min="0" max="100" required>
+            <label for="water_level" class="form-label">Water Level (%)</label>
+            <input type="number" class="form-control" id="water_level" name="water_level" min="0" max="100" required>
         </div>
         <div class="mb-3">
-            <label for="numberOfCats" class="form-label">Number of Cats</label>
-            <input type="number" class="form-control" id="numberOfCats" name="numberOfCats" min="0" required>
+            <label for="cat_number" class="form-label">Number of Cats</label>
+            <input type="number" class="form-control" id="cat_number" name="cat_number" min="0" required>
         </div>
         <div class="mb-3">
             <label for="healthIssues" class="form-label">Health Issues</label>
@@ -51,13 +51,30 @@
             </div>
         <div class="mb-3">
             <label for="location" class="form-label">Location</label>
-            <select class="form-select" id="location" name="location" required>
-                <option value="" disabled selected>Select Location</option>
+            <select class="form-select" id="sitename" name="sitename" required>
+                <option value="" disabled selected>Select Location Name</option>
                 {{#each locations}}
                 <option value="{{this.name}}">{{this.name}}</option>
                 {{/each}}
+                <option value="noneOfThese">None of these</option>
             </select>
         </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location Name (Enter only if none apply) </label>
+            <input type="textbox" class="form-control" id="location" name="location" required>
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">Location </label>
+            <input type="textbox" class="form-control" id="location" name="location" required>
+        </div>
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" name="status" required>
+                <option value="none">Active</option>
+                <option value="minor">Inactive</option>
+            </select>
+        </div>
+        <input type="hidden" value={{siteNum}} id="sitenumber" name="sitenumber">
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>

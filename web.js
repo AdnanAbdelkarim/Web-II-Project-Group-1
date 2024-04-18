@@ -217,7 +217,7 @@ app.get('/catcarerecord', async (req, res) => {
     
     try {
         let data = await business.get_feeding_locations();
-        res.render('feeding_stationMain', {locations: data, route: 'Cat Care Record'})
+        res.render('feeding_stationMain', {locations: data, route: 'Cat Care Record', siteNum: data.length})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
@@ -264,32 +264,37 @@ app.post('/delete_feeding_location', async (req, res) => {
     res.redirect('/feeding_stations')
 });
 
-app.get('/add_feeding_station', async (req, res) => {
-    const activeCookie = req.cookies.session;
-    if (!activeCookie) {
-        return res.render('public-viewers', {
-            layout: undefined,
-            errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: data
-        });
-    }
-    res.render('add_feeding_station', {layout: 'adminMain'})
-})
-
 app.post('/add_feeding_station', async (req, res) => {
     num = req.body.sitenumber
     sitename = req.body.sitename
-    sitelocation = req.body.sitelocation
-    foodlevel = req.body.foodlevel
+    sitelocation = req.body.location
+    foodlevel = req.body.food_level
     water_level = req.body.water_level
-    urgent_items = req.body.urgent_items
+    litterbox = req.body.litterbox
+
     cat_number = req.body.cat_number
-    health_issues = req.body.health_issues
+    health_issues = req.body.healthIssues
     sitestatus = req.body.status
     await business.add_feeding_locations(
-        num, sitename, sitelocation, foodlevel, water_level, urgent_items, cat_number,
+        num, sitename, foodlevel, water_level, urgent_items, cat_number,
         health_issues, sitestatus)
         res.redirect('/admin')
+})
+
+app.post('/update_feeding_stationMain', async(req, res) => {
+    const siteNum = req.body.siteNum
+    const foodlevel = req.body.food_level
+    const water_level = req.body.water_level
+    const urgent_items = {
+        litterBox: req.body.litterBox,
+        foodBowl: req.body.foodBowl,
+        waterBowl: req.body.waterBowl,
+    }
+    const cat_number = req.body.cat_number
+    const health_issues = req.body.health_issues
+    const sitestatus = 'Active'
+    await business.update_feeding_locations(siteNum, foodlevel, water_level, cat_number, urgent_items, health_issues, sitestatus)
+    res.redirect('/feeding_stations')
 })
 
 app.get('/update_feeding_station', (req, res) => {
