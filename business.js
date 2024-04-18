@@ -57,7 +57,7 @@ async function getSessionData(key) {
 }
 
 async function deleteSession(key) {
-    persistence.deleteSession(key)
+    await persistence.deleteSession(key)
 }
 
 async function addUser(username, email, password){
@@ -106,6 +106,13 @@ async function reportDetails(info){
 async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
     await persistence.update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status)
 }
+async function delete_feeding_locations(number){
+    return await persistence.delete_feeding_locations(number)
+}
+
+async function add_feeding_locations(number, name, location, food_level, water_level, urgent_items, cat_number, health_issues, status){
+    return await persistence.add_feeding_locations(number, name, location, food_level, water_level, urgent_items, cat_number, health_issues, status)
+}
 
 module.exports = {
     validateCredentials, startSession,
@@ -114,5 +121,7 @@ module.exports = {
     generateCSRFToken, cancelCSRFToken,
     getUserbyEmail, updatePassword, 
     salted_hashed_password, passwordvalidity, 
-    visitDetails, reportDetails, createPost, getPosts
+    visitDetails, reportDetails, createPost, getPosts,
+    update_feeding_locations, delete_feeding_locations,
+    add_feeding_locations
 }

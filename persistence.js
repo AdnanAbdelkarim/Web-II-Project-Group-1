@@ -92,6 +92,7 @@ async function get_feeding_locations() {
 }
 //For Member
 async function update_feeding_locations(number, food_level, water_level, cat_number, health_issues, status){
+    await connectDatabase()
     let feeding_locations = db.collection('feeding_sites');
     await feeding_locations.updateOne({"number": number},
     {$set:{
@@ -102,6 +103,30 @@ async function update_feeding_locations(number, food_level, water_level, cat_num
         "status": status
     }})
 }
+
+async function delete_feeding_locations(number){
+    await connectDatabase()
+    let feeding_locations = db.collection('feeding_sites');
+    await feeding_locations.deleteOne({"number": number})
+    return true
+}
+
+async function add_feeding_locations(number, name, location, food_level, water_level, urgent_items, cat_number, health_issues, status){
+    await connectDatabase()
+    let feeding_locations = db.collection('feeding_sites');
+    await feeding_locations.insertOne({
+        "number": number,
+        "name": name,
+        "location": location,
+        "food_level": food_level,
+        "water_level": water_level,
+        "urgent_items": urgent_items,
+        "cat_number": cat_number,
+        "health_issues": health_issues,
+        "status": status})
+        return true
+}
+
 
 async function addUser(username, email, password) {
     await connectDatabase()
@@ -142,5 +167,6 @@ module.exports = {
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
     updatePassword, recordVisit,
-    recordReport, createPost, getPosts
+    recordReport, createPost, getPosts, delete_feeding_locations,
+    add_feeding_locations, update_feeding_locations
 }

@@ -104,8 +104,6 @@ app.post('/login', async (req, res) => {
         res.render("login", {
             layout: undefined,
             errorMessage: "Username DOES NOT EXIST",
-            // Pass all form inputs back to the template for repopulating the form, except password and repeated password,
-            // and display error message
             username: username,
         })
     }
@@ -118,7 +116,11 @@ app.post('/login', async (req, res) => {
 app.get('/standard', async (req, res) => {
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
-        return res.redirect('/?message=The+session+has+ended');
+        return res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
     }
     const data = await business.get_feeding_locations();
     if (!data) {
@@ -137,8 +139,11 @@ app.get('/posts', async (req, res) => {
 
     activeCookie = req.cookies.session
     if (!activeCookie) {
-        res.redirect('/?message=The+session+has+ended')
-        return
+        return res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
     }
     res.render('posts', { layout: undefined, posts: all_posts })
 });
@@ -201,23 +206,78 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/admin', async (req, res) => {
     const activeCookie = req.cookies.session;
-    if (!activeCookie) {
-        return res.redirect('/?message=The+session+has+ended');
-    }
     const data = await business.get_feeding_locations();
+    if (!activeCookie) {
+        return res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
+    }
     if (!data) {
         return res.render('public-viewers', {
             layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: []
+            locations: data
         });
     }
     const fixed_locations = await business.get_feeding_locations();
-    res.render('admin', {
+    res.render('admin1', {
         layout: undefined,
         locations: fixed_locations
     });
 });
+
+
+
+
+app.get('/feeding_stations', async(req, res) => {
+    const fixed_locations = await business.get_feeding_locations();
+    res.render('feeding_stations', {
+        layout: undefined,
+        locations: fixed_locations
+    });
+
+  
+});
+
+app.post('/delete_feeding_location', async (req, res) => {
+    let siteNumber = req.body.siteNum;
+    console.log(siteNumber)
+    
+    await business.delete_feeding_locations(siteNumber)
+
+    res.redirect('/feeding_stations')
+});
+
+app.get('/add_feeding_station', async (req, res) => {
+    res.render('add_feeding_station', {layout: undefined})
+
+})
+
+app.post('/add_feeding_station', async (req, res) => {
+    num = req.body.sitenumber
+    sitename = req.body.sitename
+    sitelocation = req.body.sitelocation
+    foodlevel = req.body.foodlevel
+    water_level = req.body.water_level
+    urgent_items = req.body.urgent_items
+    cat_number = req.body.cat_number
+    health_issues = req.body.health_issues
+    sitestatus = req.body.status
+
+    await business.add_feeding_locations(
+        num, sitename, sitelocation, foodlevel, water_level, urgent_items, cat_number,
+        health_issues, sitestatus)
+        
+
+        res.redirect('/feeding_stations')
+})
+
+app.get('/adminGraph', (req, res) => {
+    res.render('adminGraph', {layout: undefined})
+})
+
 
 
 app.get('/resetpassword', async (req, res) => {
