@@ -268,16 +268,14 @@ app.post('/add_feeding_station', async (req, res) => {
     num = req.body.sitenumber
     sitename = req.body.sitename
     sitelocation = req.body.location
-    foodlevel = req.body.food_level
+    food_level = req.body.food_level
     water_level = req.body.water_level
-    litterbox = req.body.litterbox
-
+    urgent_items = 'Litter box is: ' + req.body.litterBox + ', food and water bowl is ' + req.body.foodBowl +  ' and ' + req.body.waterBowl
     cat_number = req.body.cat_number
     health_issues = req.body.healthIssues
     sitestatus = req.body.status
-    await business.add_feeding_locations(
-        num, sitename, foodlevel, water_level, urgent_items, cat_number,
-        health_issues, sitestatus)
+    await business.add_feeding_locations(num, sitename, sitelocation, 
+        food_level, water_level, urgent_items, cat_number, health_issues, sitestatus)
         res.redirect('/admin')
 })
 
