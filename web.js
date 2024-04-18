@@ -149,10 +149,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.post('/posts', async (req, res) => {
     // get the data
     let textContent = req.body.textContent
-    let postPic = req.files.post_pic
-
-    let filePath = `/assets/${Date.now()}_${postPic.name}`
-    await postPic.mv(`${__dirname}${filePath}`)
+    let postPic = req.files && req.files.post_pic
 
     // validate the data
     let errors = []
@@ -166,20 +163,34 @@ app.post('/posts', async (req, res) => {
     }
 
     // validate picture/ file upload 
-    if (!['image/jpeg', 'image/png', 'image/jpeg'].includes(postPic.mimetype)) {
-        errors.push('Only JPEG, PNG, and JPG files are allowed')
+    if (postPic) {
+        if (!['image/jpeg', 'image/png', 'image/jpeg'].includes(postPic.mimetype)) {
+            errors.push('Only JPEG, PNG, and JPG files are allowed')
+        }
+
+        const maxSize = 1 * 1024 * 1024; // 1MB in bytes
+        if (postPic.size > maxSize) {
+            return res.status(400).send('File size exceeds the limit (1MB)');
+        }
+    } else {
+        errors.push('Image is required')
+        if (errors.length !== 0) {
+            let all_posts = await business.getPosts()
+            res.render('posts', { layout: undefined, errors, posts: all_posts })
+            return
+        }
     }
 
-    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
-    if (postPic.size > maxSize) {
-      return res.status(400).send('File size exceeds the limit (1MB)');
-    }
 
 
     if (errors.length !== 0) {
         let all_posts = await business.getPosts()
         res.render('posts', { layout: undefined, errors, posts: all_posts })
+        return
     }
+
+    let filePath = `/assets/${Date.now()}_${postPic.name}`
+    await postPic.mv(`${__dirname}${filePath}`)
     // Save to db
     await business.createPost(textContent, filePath)
     let all_posts = await business.getPosts()
