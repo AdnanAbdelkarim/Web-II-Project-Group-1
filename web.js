@@ -14,7 +14,7 @@ app.engine('handlebars', handlebars.engine())
 app.use(bodyParser.urlencoded())
 app.use(cookieParser())
 
-
+//Abdullatif Abuzannad - 60101855
 app.get('/', async (req, res) => {
     try {
         let data = await business.get_feeding_locations();
@@ -92,11 +92,11 @@ app.post('/login', async (req, res) => {
         let session_id = await business.startSession({ userName: username, accountType: valid })
         let sessionData = await business.getSessionData(session_id)
         if (valid === 'admin') {
-            res.cookie('session', session_id, { expires: sessionData.Expiry })
+            res.cookie('session', session_id, { expires: sessionData.Expiry , httpOnly: true, secure: true})
             res.redirect('/admin')
         }
         else if (valid === 'standard') {
-            res.cookie('session', session_id, { expires: sessionData.Expiry })
+            res.cookie('session', session_id, { expires: sessionData.Expiry , httpOnly: true, secure: true})
             res.redirect('/standard')
         }
     }
@@ -134,9 +134,14 @@ app.get('/standard', async (req, res) => {
 });
 
 
+<<<<<<< HEAD
 app.get('/blog', async (req, res) => {
     let all_blog = await business.getBlog()
 
+=======
+app.get('/posts', async (req, res) => {
+    let all_posts = await business.getPosts()
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
     activeCookie = req.cookies.session
     if (!activeCookie) {
         return res.render('public-viewers', {
@@ -180,8 +185,13 @@ app.post('/blog', async (req, res) => {
     } else {
         errors.push('Image is required')
         if (errors.length !== 0) {
+<<<<<<< HEAD
             let all_blog = await business.getBlog()
             res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
+=======
+            let all_posts = await business.getPosts()
+            res.render('posts', {layout: 'main', errors, posts: all_posts })
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
             return
         }
     }
@@ -189,8 +199,13 @@ app.post('/blog', async (req, res) => {
 
 
     if (errors.length !== 0) {
+<<<<<<< HEAD
         let all_blog = await business.getBlog()
         res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
+=======
+        let all_posts = await business.getPosts()
+        res.render('posts', { layout: 'main', errors, posts: all_posts })
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
         return
     }
 
@@ -198,8 +213,13 @@ app.post('/blog', async (req, res) => {
     await postPic.mv(`${__dirname}${filePath}`)
     // Save to db
     await business.createPost(textContent, filePath)
+<<<<<<< HEAD
     let all_blog = await business.getBlog()
     res.render('blog', { layout: 'main', route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
+=======
+    let all_posts = await business.getPosts()
+    res.render('posts', { layout: 'main', success: 'New Post Added Successfully', posts: all_posts })
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 })
 
 app.get('/catcarerecord', async (req, res) => {
@@ -285,7 +305,19 @@ app.post('/delete_feeding_location', async (req, res) => {
 });
 
 app.get('/add_feeding_station', async (req, res) => {
+<<<<<<< HEAD
     res.render('add_feeding_station', {layout: 'main'})
+=======
+    const activeCookie = req.cookies.session;
+    if (!activeCookie) {
+        return res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
+    }
+    res.render('add_feeding_station', {layout: undefined})
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 
 })
 
@@ -308,8 +340,60 @@ app.post('/add_feeding_station', async (req, res) => {
         res.redirect('/feeding_stations')
 })
 
+<<<<<<< HEAD
 app.get('/adminGraph', (req, res) => {
     res.render('adminGraph', {layout: 'main'})
+=======
+// Node.js route
+app.get('/adminGraph', async(req, res) => {
+    const activeCookie = req.cookies.session;
+    if (!activeCookie) {
+        return res.render('public-viewers', {
+            layout: 'adminMain.handlebars',
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
+    }
+    let food_water_amount = await business.get_feeding_locations(); // Array of objects
+    let food = food_water_amount.map((item) => parseFloat(item.food_level));
+    let water = food_water_amount.map((item) => parseFloat(item.water_level));
+
+    // Calculate averages
+    let foodAverage = food.reduce((acc, val) => acc + val, 0) / food.length;
+    let waterAverage = water.reduce((acc, val) => acc + val, 0) / water.length;
+
+    res.render('adminGraph', {
+        layout: undefined,
+        water: JSON.stringify(water), // Convert water array to JSON string
+        food: JSON.stringify(food),  // Convert food array to JSON string
+        foodAverage: foodAverage,
+        waterAverage: waterAverage
+    });
+});
+
+
+app.get('/admin_urgent', async(req, res) => {
+    const activeCookie = req.cookies.session;
+    if (!activeCookie) {
+        return res.render('public-viewers', {
+            layout: undefined,
+            errorMessage: "The session has ended, please Login or Sign Up!",
+            locations: data
+        });
+    }
+    feedingLocations = await business.get_feeding_locations()
+    let filteredLocations = [];
+    for (i of feedingLocations){
+        if(i.food_level <= 50 && i.water_level <= 50 && (i.status).toLowerCase() === "active"&& (i.health_issues).toLowerCase() !== 'none'){
+            filteredLocations.push(i);
+        }
+    }
+    console.log(filteredLocations)
+    res.render('admin_urgent', {
+        layout: undefined,
+        locations: filteredLocations})
+
+>>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 })
 
 app.get('/resetpassword', async (req, res) => {
