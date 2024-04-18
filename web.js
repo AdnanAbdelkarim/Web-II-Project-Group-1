@@ -134,14 +134,14 @@ app.get('/standard', async (req, res) => {
 });
 
 
-<<<<<<< HEAD
+
+app.get('/blog', async (req, res) => {
+    let all_blog = await business.getBlog()
+})
+
 app.get('/blog', async (req, res) => {
     let all_blog = await business.getBlog()
 
-=======
-app.get('/posts', async (req, res) => {
-    let all_posts = await business.getPosts()
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
     activeCookie = req.cookies.session
     if (!activeCookie) {
         return res.render('public-viewers', {
@@ -185,13 +185,10 @@ app.post('/blog', async (req, res) => {
     } else {
         errors.push('Image is required')
         if (errors.length !== 0) {
-<<<<<<< HEAD
+
             let all_blog = await business.getBlog()
             res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
-=======
-            let all_posts = await business.getPosts()
-            res.render('posts', {layout: 'main', errors, posts: all_posts })
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
+
             return
         }
     }
@@ -199,13 +196,10 @@ app.post('/blog', async (req, res) => {
 
 
     if (errors.length !== 0) {
-<<<<<<< HEAD
+
         let all_blog = await business.getBlog()
         res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
-=======
-        let all_posts = await business.getPosts()
-        res.render('posts', { layout: 'main', errors, posts: all_posts })
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
+
         return
     }
 
@@ -213,13 +207,9 @@ app.post('/blog', async (req, res) => {
     await postPic.mv(`${__dirname}${filePath}`)
     // Save to db
     await business.createPost(textContent, filePath)
-<<<<<<< HEAD
+
     let all_blog = await business.getBlog()
     res.render('blog', { layout: 'main', route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
-=======
-    let all_posts = await business.getPosts()
-    res.render('posts', { layout: 'main', success: 'New Post Added Successfully', posts: all_posts })
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 })
 
 app.get('/catcarerecord', async (req, res) => {
@@ -232,7 +222,7 @@ app.get('/catcarerecord', async (req, res) => {
     
     try {
         let data = await business.get_feeding_locations();
-        res.render('catcarerecord', {locations: data, route: 'Cat Care Record', formatDateNowISO: formatDateNowISO})
+        res.render('catcarerecord', {locations: data, route: 'Cat Care Record'})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
@@ -305,9 +295,6 @@ app.post('/delete_feeding_location', async (req, res) => {
 });
 
 app.get('/add_feeding_station', async (req, res) => {
-<<<<<<< HEAD
-    res.render('add_feeding_station', {layout: 'main'})
-=======
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
         return res.render('public-viewers', {
@@ -316,9 +303,7 @@ app.get('/add_feeding_station', async (req, res) => {
             locations: data
         });
     }
-    res.render('add_feeding_station', {layout: undefined})
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
-
+    res.render('add_feeding_station', {layout: 'adminMain'})
 })
 
 app.post('/add_feeding_station', async (req, res) => {
@@ -340,10 +325,6 @@ app.post('/add_feeding_station', async (req, res) => {
         res.redirect('/feeding_stations')
 })
 
-<<<<<<< HEAD
-app.get('/adminGraph', (req, res) => {
-    res.render('adminGraph', {layout: 'main'})
-=======
 // Node.js route
 app.get('/adminGraph', async(req, res) => {
     const activeCookie = req.cookies.session;
@@ -392,8 +373,6 @@ app.get('/admin_urgent', async(req, res) => {
     res.render('admin_urgent', {
         layout: undefined,
         locations: filteredLocations})
-
->>>>>>> 45ff3b0be8864823f1e429482aaea936c05d33e9
 })
 
 app.get('/resetpassword', async (req, res) => {
@@ -469,4 +448,4 @@ app.use(error404)
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
-});
+})

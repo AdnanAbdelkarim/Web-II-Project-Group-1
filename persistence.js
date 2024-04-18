@@ -7,7 +7,7 @@ let session = undefined
 let feeding_locations = undefined
 let visit_details = undefined
 let incident_reports = undefined
-let posts = undefined
+let blog = undefined
 
 async function connectDatabase() {
     if (!client) {
@@ -15,7 +15,7 @@ async function connectDatabase() {
         await client.connect();
         db = client.db('project_related_database');
         users = db.collection('UserAccounts');
-        posts = db.collection('posts');
+        blog = db.collection('blog');
         session = db.collection('sessions')
         feeding_locations = db.collection('feeding_sites');
         visit_details = db.collection('visit_details');
@@ -33,11 +33,11 @@ async function getUserDetails(username) {
     }
 }
 
-async function getPosts() {
+async function getBlog() {
     await connectDatabase()
-    if (posts) {
-        let allposts = await posts.find({}).toArray()    
-        return allposts; // returning userInfo regardless of account lock status
+    if (blog) {
+        let allblog = await blog.find({}).toArray()    
+        return allblog; // returning userInfo regardless of account lock status
     }
 }
 
@@ -136,9 +136,9 @@ async function addUser(username, email, password) {
     await users.insertOne({ username: username, password: password, email: email, accountType: "standard" });
 }
 
-async function createPost(textContent, filePath) {
+async function createBlog(textContent, filePath) {
     await connectDatabase()
-    await posts.insertOne({ textContent, filePath });
+    await blog.insertOne({ textContent, filePath });
 }
 
 async function recordVisit(info) {
@@ -191,6 +191,6 @@ module.exports = {
     addUser, get_feeding_locations,
     updateSession, getUserbyEmail,
     updatePassword, recordVisit,
-    recordReport, createPost, getPosts, delete_feeding_locations,
+    recordReport, createBlog, getBlog, delete_feeding_locations,
     add_feeding_locations, update_feeding_locations
 }

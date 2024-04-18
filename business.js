@@ -6,8 +6,8 @@ async function getUserDetails(username) {
     return await persistence.getUserDetails(username)
 }
 
-async function getPosts() {
-    return await persistence.getPosts()
+async function getBlog() {
+    return await persistence.getBlog()
 }
 
 async function getUserbyEmail(email) {
@@ -121,7 +121,7 @@ module.exports = {
     generateCSRFToken, cancelCSRFToken,
     getUserbyEmail, updatePassword, 
     salted_hashed_password, passwordvalidity, 
-    visitDetails, reportDetails, createPost, getPosts,
+    visitDetails, reportDetails, createPost, getBlog,
     update_feeding_locations, delete_feeding_locations,
     add_feeding_locations
 }
