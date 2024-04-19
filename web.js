@@ -152,7 +152,7 @@ app.get('/dashboard', async (req, res) => {
         });
     }
     console.log(isAdmin)
-    res.render('feeding_stations', {layout:'main', route:'Dashboard', locations: data, isAdmin:isAdmin});
+    res.render('feeding_stations', {layout:undefined, route:'Dashboard', locations: data, isAdmin:isAdmin});
 });
 
 app.get('/blog', async (req, res) => {
@@ -161,7 +161,7 @@ app.get('/blog', async (req, res) => {
     activeCookie = req.cookies.session
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: 'main',
+            layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
@@ -174,7 +174,7 @@ app.get('/blog', async (req, res) => {
     if (valid === 'standard') {
         isAdmin = false
     }
-    res.render('blog', { layout:'main', route:'Blog', blog: all_blog, isAdmin:isAdmin})
+    res.render('blog', { layout:undefined, route:'Blog', blog: all_blog, isAdmin:isAdmin})
 });
 
 
@@ -211,7 +211,7 @@ app.post('/blog', async (req, res) => {
         if (errors.length !== 0) {
 
             let all_blog = await business.getBlog()
-            res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
+            res.render('blog', { layout: undefined, route: 'Blog', errors, blog: all_blog })
 
             return
         }
@@ -222,7 +222,7 @@ app.post('/blog', async (req, res) => {
     if (errors.length !== 0) {
 
         let all_blog = await business.getBlog()
-        res.render('blog', { layout: 'main', route: 'Blog', errors, blog: all_blog })
+        res.render('blog', { layout: undefined, route: 'Blog', errors, blog: all_blog })
 
         return
     }
@@ -233,7 +233,7 @@ app.post('/blog', async (req, res) => {
     await business.createBlog(textContent, filePath)
 
     let all_blog = await business.getBlog()
-    res.render('blog', { layout: 'main', route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
+    res.render('blog', { layout: undefined, route: 'Blog', success: 'New Post Added Successfully', blog: all_blog })
 })
 
 app.get('/catcarerecord', async (req, res) => {
@@ -253,7 +253,7 @@ app.get('/catcarerecord', async (req, res) => {
     }
     try {
         let data = await business.get_feeding_locations();
-        res.render('information', {locations: data, route: 'Cat Care Record', siteNum: data.length, isAdmin:isAdmin})
+        res.render('information', {layout: undefined, locations: data, route: 'Cat Care Record', siteNum: data.length, isAdmin:isAdmin})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
@@ -330,7 +330,7 @@ app.get('/adminGraph', async(req, res) => {
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: 'main',
+            layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
@@ -387,7 +387,7 @@ app.get('/admin_urgent', async(req, res) => {
         }
     }
     res.render('admin_urgent', {
-        layout: 'main',
+        layout: undefined,
         locations: filteredLocations, 
         route: 'Urgent',
         isAdmin: isAdmin
@@ -395,7 +395,7 @@ app.get('/admin_urgent', async(req, res) => {
 })
 
 app.get('/resetpassword', async (req, res) => {
-    res.render('resetpassword', { layout: 'main' })
+    res.render('resetpassword', { layout: undefined })
 })
 
 app.post('/resetpassword', async (req, res) => {
@@ -403,7 +403,7 @@ app.post('/resetpassword', async (req, res) => {
     const userEmail = await business.getUserbyEmail(email);
 
     if (!userEmail) {
-        return res.render("resetpassword", { layout: 'main', errorMessage: "Email not Registered!" });
+        return res.render("resetpassword", { layout: undefined, errorMessage: "Email not Registered!" });
     }
     else if (userEmail) {
         res.cookie('tempCookie', email); // Set the cookie
@@ -416,7 +416,7 @@ app.post('/resetpassword', async (req, res) => {
 });
 
 app.get('/passwordreset', (req, res) => {
-    res.render('passwordreset', { layout: 'main' })
+    res.render('passwordreset', { layout: undefined })
 })
 
 app.post('/passwordreset', async (req, res) => {
@@ -426,7 +426,7 @@ app.post('/passwordreset', async (req, res) => {
     passwordvalidation = await business.passwordvalidity(newPass, newPassRepeated)
     if (!passwordvalidation) {
         res.render("passwordreset",
-            { layout: 'main', errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
+            { layout: undefined, errorMessage: "The password must consist of a minimum of 8 characters, including at least one special character, and it must match the confirmation password." });
     }
     else {
         await business.updatePassword(email, newPass)
@@ -435,7 +435,7 @@ app.post('/passwordreset', async (req, res) => {
 
         res.render('login',
             {
-                layout: 'main',
+                layout: undefined,
                 errorMessage: "The password has been reset successfully"
             })
     }
@@ -443,7 +443,7 @@ app.post('/passwordreset', async (req, res) => {
 
 async function error404(req, res) {
     res.status(404).render("404", {
-        layout: 'main'
+        layout: undefined
     })
 }
 
@@ -458,7 +458,7 @@ app.get('/logout', async (req, res) => {
 
 async function error404(req, res) {
     res.status(404).render("404", {
-        layout: 'main'
+        layout: undefined
     })
 }
 
