@@ -8,24 +8,12 @@ const app = express();
 const port = 8000;
 const fileUpload = require('express-fileupload');
 
-// Define the helper function
-function checkAdmin(check) {
-    return check;
-}
+app.set('views', __dirname + "/templates")
+app.set('view engine', 'handlebars')
+app.engine('handlebars', handlebars.engine())
+app.use(bodyParser.urlencoded())
+app.use(cookieParser())
 
-// Create an instance of Handlebars
-const handlebarsInstance = handlebars.create({
-    helpers: {
-        checkAdmin: checkAdmin
-    }
-});
-
-// Set up Express
-app.set('views', __dirname + "/templates");
-app.set('view engine', 'handlebars');
-app.engine('handlebars', handlebarsInstance.engine); // No callback function needed here
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
 
 //Abdullatif Abuzannad - 60101855
 app.get('/', async (req, res) => {
@@ -151,7 +139,6 @@ app.get('/dashboard', async (req, res) => {
             locations: []
         });
     }
-    console.log(isAdmin)
     res.render('feeding_stations', {layout:undefined, route:'Dashboard', locations: data, isAdmin:isAdmin});
 });
 
