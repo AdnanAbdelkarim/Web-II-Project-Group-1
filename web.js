@@ -270,7 +270,33 @@ app.post('/add_feeding_station', async (req, res) => {
     sitelocation = req.body.location
     food_level = req.body.food_level
     water_level = req.body.water_level
-    urgent_items = 'Litter box is: ' + req.body.litterBox + ', food and water bowl is ' + req.body.foodBowl +  ' and ' + req.body.waterBowl
+
+    const litterBox = req.body.litterBox;
+    const foodBowl = req.body.foodBowl;
+    const waterBowl = req.body.waterBowl;
+
+    let urgent_items = [];
+
+    if (litterBox !== 'available') {
+        urgent_items.push('Litter box is: ' + litterBox);
+    }
+
+    if (foodBowl !== 'available') {
+        urgent_items.push('Food bowl is: ' + foodBowl);
+    }
+
+    if (waterBowl !== 'available') {
+        urgent_items.push('Water bowl is: ' + waterBowl);
+    }
+
+    if (urgent_items.length === 0) {
+        urgent_items.push('none');
+    }
+
+    // Join the urgent items array into a single string
+    urgent_items = urgent_items.join(', ');
+
+
     cat_number = req.body.cat_number
     health_issues = req.body.healthIssues
     sitestatus = req.body.status
