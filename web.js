@@ -8,11 +8,24 @@ const app = express();
 const port = 8000;
 const fileUpload = require('express-fileupload');
 
-app.set('views', __dirname + "/templates")
-app.set('view engine', 'handlebars')
-app.engine('handlebars', handlebars.engine())
-app.use(bodyParser.urlencoded())
-app.use(cookieParser())
+// Define the helper function
+function checkAdmin(check) {
+    return check;
+}
+
+// Create an instance of Handlebars
+const handlebarsInstance = handlebars.create({
+    helpers: {
+        checkAdmin: checkAdmin
+    }
+});
+
+// Set up Express
+app.set('views', __dirname + "/templates");
+app.set('view engine', 'handlebars');
+app.engine('handlebars', handlebarsInstance.engine); // No callback function needed here
+app.use(bodyParser.urlencoded());
+app.use(cookieParser());
 
 //Abdullatif Abuzannad - 60101855
 app.get('/', async (req, res) => {
@@ -94,12 +107,11 @@ app.post('/login', async (req, res) => {
         if (valid === 'admin') {
             //let token = await business.generateCSRFToken(session_id)
             res.cookie('session', session_id, { expires: sessionData.Expiry })
-            res.redirect('/admin')
         }
         else if (valid === 'standard') {
             res.cookie('session', session_id, { expires: sessionData.Expiry , httpOnly: true, secure: true})
-            res.redirect('/standard')
         }
+        res.redirect('/dashboard')
     }
     else if (!valid) {
         res.render("login", {
@@ -114,24 +126,33 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.get('/standard', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: 'main',
+            layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
     }
+    sd = await business.getSessionData(activeCookie)
+    valid = sd.Data.accountType
+    if (valid == 'admin') {
+        isAdmin = true
+    }
+    else if (valid == 'standard') {
+        isAdmin = false
+    }
     const data = await business.get_feeding_locations();
     if (!data) {
         return res.render('public-viewers', {
-            layout: 'main',
+            layout: undefined,
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: []
         });
     }
-    res.render('fakeUsers', {layout:'main', route:'Standard'});
+    console.log(isAdmin)
+    res.render('feeding_stations', {layout:'main', route:'Dashboard', locations: data, isAdmin:isAdmin});
 });
 
 app.get('/blog', async (req, res) => {
@@ -145,7 +166,15 @@ app.get('/blog', async (req, res) => {
             locations: data
         });
     }
-    res.render('blog', { layout:'main', route:'Blog', blog: all_blog })
+    sd = await business.getSessionData(activeCookie)
+    valid = sd.Data.accountType
+    if (valid === 'admin') {
+        isAdmin = true
+    }
+    if (valid === 'standard') {
+        isAdmin = false
+    }
+    res.render('blog', { layout:'main', route:'Blog', blog: all_blog, isAdmin:isAdmin})
 });
 
 
@@ -214,10 +243,17 @@ app.get('/catcarerecord', async (req, res) => {
         res.redirect('/?message=The+session+has+ended')
         return
     }    
-    
+    sd = await business.getSessionData(activeCookie)
+    valid = sd.Data.accountType
+    if (valid === 'admin') {
+        isAdmin = true
+    }
+    if (valid === 'standard') {
+        isAdmin = false
+    }
     try {
         let data = await business.get_feeding_locations();
-        res.render('feeding_stationMain', {locations: data, route: 'Cat Care Record', siteNum: data.length})
+        res.render('information', {locations: data, route: 'Cat Care Record', siteNum: data.length, isAdmin:isAdmin})
     } catch (error) {
         res.render('404', { layout: undefined })
     }
@@ -225,43 +261,10 @@ app.get('/catcarerecord', async (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('/admin', async (req, res) => {
-    const activeCookie = req.cookies.session;
-    const data = await business.get_feeding_locations();
-    if (!activeCookie) {
-        return res.render('public-viewers', {
-            layout: 'main',
-            errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: data
-        });
-    }
-    if (!data) {
-        return res.render('public-viewers', {
-            layout: 'main',
-            errorMessage: "The session has ended, please Login or Sign Up!",
-            locations: data
-        });
-    }
-    const fixed_locations = await business.get_feeding_locations();
-    res.render('feeding_stations', {
-        layout: "adminMain",
-        locations: fixed_locations
-    });
-});
-
-
-app.get('/feeding_stations', async(req, res) => {
-    const fixed_locations = await business.get_feeding_locations();
-    res.render('feeding_stations', {
-        layout: 'adminMain',
-        locations: fixed_locations
-    });
-});
-
 app.post('/delete_feeding_location', async (req, res) => {
     let siteNumber = req.body.siteNum;  
     await business.delete_feeding_locations(siteNumber)
-    res.redirect('/feeding_stations')
+    res.redirect('/dashboard')
 });
 
 app.post('/add_feeding_station', async (req, res) => {
@@ -302,23 +305,7 @@ app.post('/add_feeding_station', async (req, res) => {
     sitestatus = req.body.status
     await business.add_feeding_locations(num, sitename, sitelocation, 
         food_level, water_level, urgent_items, cat_number, health_issues, sitestatus)
-        res.redirect('/admin')
-})
-
-app.post('/update_feeding_stationMain', async(req, res) => {
-    const siteNum = req.body.siteNum
-    const foodlevel = req.body.food_level
-    const water_level = req.body.water_level
-    const urgent_items = {
-        litterBox: req.body.litterBox,
-        foodBowl: req.body.foodBowl,
-        waterBowl: req.body.waterBowl,
-    }
-    const cat_number = req.body.cat_number
-    const health_issues = req.body.health_issues
-    const sitestatus = 'Active'
-    await business.update_feeding_locations(siteNum, foodlevel, water_level, cat_number, urgent_items, health_issues, sitestatus)
-    res.redirect('/feeding_stations')
+        res.redirect('/dashboard')
 })
 
 app.get('/update_feeding_station', (req, res) => {
@@ -335,7 +322,7 @@ app.post('/update_feeding_station', async(req, res) => {
     const health_issues = req.body.health_issues
     const sitestatus = req.body.status
     await business.update_feeding_locations(num, foodlevel, water_level, cat_number, urgent_items, health_issues, sitestatus)
-    res.redirect('/feeding_stations')
+    res.redirect('/dashboard')
 })
 
 // Node.js route
@@ -343,10 +330,18 @@ app.get('/adminGraph', async(req, res) => {
     const activeCookie = req.cookies.session;
     if (!activeCookie) {
         return res.render('public-viewers', {
-            layout: 'adminMain.handlebars',
+            layout: 'main',
             errorMessage: "The session has ended, please Login or Sign Up!",
             locations: data
         });
+    }
+    sd = await business.getSessionData(activeCookie)
+    valid = sd.Data.accountType
+    if (valid === 'admin') {
+        isAdmin = true
+    }
+    else if (valid === 'standard') {
+        isAdmin = false
     }
     let food_water_amount = await business.get_feeding_locations(); // Array of objects
     let food = food_water_amount.map((item) => parseFloat(item.food_level));
@@ -361,13 +356,22 @@ app.get('/adminGraph', async(req, res) => {
         water: JSON.stringify(water), // Convert water array to JSON string
         food: JSON.stringify(food),  // Convert food array to JSON string
         foodAverage: foodAverage,
-        waterAverage: waterAverage
+        waterAverage: waterAverage,
+        isAdmin: isAdmin
     });
 });
 
 
 app.get('/admin_urgent', async(req, res) => {
     const activeCookie = req.cookies.session;
+    sd = await business.getSessionData(activeCookie)
+    valid = sd.Data.accountType
+    if (valid === 'admin') {
+        isAdmin = true
+    }
+    else if (valid === 'standard') {
+        isAdmin = false
+    }
     if (!activeCookie) {
         return res.render('public-viewers', {
             layout: undefined,
@@ -383,9 +387,10 @@ app.get('/admin_urgent', async(req, res) => {
         }
     }
     res.render('admin_urgent', {
-        layout: 'adminMain',
+        layout: 'main',
         locations: filteredLocations, 
-        route: 'Urgent'
+        route: 'Urgent',
+        isAdmin: isAdmin
     })
 })
 

@@ -43,32 +43,37 @@ table.feedingStation td {
 }
 </style>     
 <table class="feedingStation">
-  <tbody>
-      {{#each locations}}
-      <tr>
-          <td name="siteNum">{{this.number}}</td>
-          <td>{{this.name}}</td>
-          <td><a href="{{this.location}}">{{this.location}}</a></td>
-          <td class="red" >{{this.food_level}}</td>
-          <td class="red" >{{this.water_level}}</td>
-          <td class="urgent" >{{this.urgent_items}}</td>
-          <td>{{this.cat_number}}</td>
-          <td class="issues">{{this.health_issues}}</td>
-          <td class="status">{{this.status}}</td>
 
-            <td>
-              <form action="/delete_feeding_location" method="POST">
-              <input type="hidden" name="siteNum" value="{{this.number}}">
-              <button class="delete" type="submit">Delete</button>
-            </form>
-            </td>
-            <td><form action="/update_feeding_station" method="GET">
-              <input type="hidden" name="siteNum" value="{{this.number}}">
-              <button class="update" type="submit">Update</button>
-            </form></td>
-    </tr>
-      </tr>
-      {{/each}}
+    <tbody>
+        {{#each locations}}
+            <tr>
+                <td name="siteNum">{{this.number}}</td>
+                <td>{{this.name}}</td>
+                <td><a href="{{this.location}}">{{this.location}}</a></td>
+                <td class="red">{{this.food_level}}</td>
+                <td class="red">{{this.water_level}}</td>
+                <td class="urgent">{{this.urgent_items}}</td>
+                <td>{{this.cat_number}}</td>
+                <td class="issues">{{this.health_issues}}</td>
+                <td class="status">{{this.status}}</td>
+                
+                {{#if isAdmin}}
+                    <td>
+                        <form action="/delete_feeding_location" method="POST">
+                            <input type="hidden" name="siteNum" value="{{this.number}}">
+                            <button class="delete" type="submit">Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/update_feeding_station" method="GET">
+                            <input type="hidden" name="siteNum" value="{{this.number}}">
+                            <button class="update" type="submit">Update</button>
+                        </form>
+                    </td>
+                {{/if}}
+            </tr>
+        {{/each}}
+
   </tbody>
 </table>
             
